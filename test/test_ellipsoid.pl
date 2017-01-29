@@ -9,7 +9,7 @@ use warnings;
 
 use Math::Trig;
 BEGIN{
-  require '../blib/lib/Geo/Ellipsoid.pm';
+  require '../lib/Geo/Ellipsoid.pm';
 }
 
 print "Enter test_ellipsoid\n\n";
@@ -200,7 +200,7 @@ sub print_target
   my $lon1 = Angle($lon1deg,$lon1min,$lon1sec);
 
   my @here = ( $lat1, $lon1 );
-  my $ellipsoid = Geo::Ellipsoid->new( ellip=>'WGS84',debug=>$debug);
+  my $ellipsoid = Geo::Ellipsoid->new( ellip=>'WGS84');
 
   my $radians = $degrees / $degrees_per_radian;
   my $x = $range*sin($radians);

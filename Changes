@@ -36,7 +36,7 @@ Revision history for Perl module Geo::Ellipsoid
        because of 'our' statements.
     4. Fix tests expecting 360 degrees for angles; change to 0.
 
-1.10 Mon Jun 30 2008
+1.1 Sun Jun 30 2008
     1. Added set_longitude_symmetric, set_bearing_symmetric, and 
        set_distance_unit methods
     2. Corrected example of at method in documentation
@@ -45,6 +45,6 @@ Revision history for Perl module Geo::Ellipsoid
     5. Added tests for different distance units and symmetrical output
        ranges.
 
-1.11 Tue Jul 1 2008
-    1. Removed ._* files added by Mac OS 10.5 tar by setting COPYFILE_DISABLE
+1.2 Fri Jul 4 2008
+    1. Correct bearing tests in 09-bearing.t
 
