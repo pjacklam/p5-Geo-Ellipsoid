@@ -17,7 +17,8 @@ use Test::Number::Delta within => 1e-14;
 
 package Geo::Ellipsoid::Subclass;
 
-use parent 'Geo::Ellipsoid';
+use Geo::Ellipsoid;
+our @ISA = 'Geo::Ellipsoid';
 
 sub _inverse {
     my $self = shift;
