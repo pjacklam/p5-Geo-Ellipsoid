@@ -3,4 +3,10 @@ Revision history for Perl module Geo::Ellipsoid
 0.01 Mon Oct 24 17:18:31 2005
     - original version; created by ExtUtils::ModuleMaker 0.43
 
-
+0.9 Fri Oct 28 2005
+    - first version uploaded to PAUSE
+   
+0.901 Mon Oct 31 2005
+    1. Add Test::Number::Delta to prerequisites in Makefile.PL.
+    2. Include correct README file.
+    3. Correct version number in Ellipsoid.pm POD.

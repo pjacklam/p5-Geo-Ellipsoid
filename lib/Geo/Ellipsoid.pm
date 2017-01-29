@@ -24,11 +24,11 @@ the surface of an ellipsoid.
 
 =head1 VERSION
 
-Version 1.0, released October, 2005.
+Version 0.901, released October, 2005.
 
 =cut
 
-our $VERSION = '0.9';
+our $VERSION = '0.901';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
