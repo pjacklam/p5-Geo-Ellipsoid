@@ -1,6 +1,6 @@
 Enter test_ellipsoid
 
-Using Geo::Ellipsoid version 1.0
+Using Geo::Ellipsoid version 1.12
 WGS84 ellipsoid values:
     Equatorial radius = 6378137.0000000000
          Polar radius = 6356752.3142451793

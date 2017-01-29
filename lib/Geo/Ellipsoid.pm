@@ -1,7 +1,7 @@
 #	Geo::Ellipsoid
 #
-#	This package implements an Ellipsoid class to perform
-#	geometrical calculations on the surface of an ellipsoid.
+#	This package implements an Ellipsoid class to perform latitude 
+#	and longitude calculations on the surface of an ellipsoid.
 #
 #	This is a Perl conversion of existing Fortran code (see
 #	ACKNOWLEDGEMENTS) and the author of this class makes no 
@@ -21,16 +21,15 @@ use Carp;
 
 =head1 NAME
 
-Geo::Ellipsoid - Calculate positions, distances, and bearings on
-the surface of an ellipsoid.
+Geo::Ellipsoid - Longitude and latitude calculations using an ellipsoid model.
 
 =head1 VERSION
 
-Version 1.11, released July 1, 2008.
+Version 1.12, released July 4, 2008.
 
 =cut
 
-our $VERSION = '1.11';
+our $VERSION = '1.12';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
@@ -944,7 +943,7 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-Geo::Distance, Geo::Ellipsoids, Geo::Forward
+Geo::Distance, Geo::Ellipsoids
 
 =cut
 

@@ -284,7 +284,7 @@ EOS
   for( my $lat1 = $lat0; $lat1 <= 90; $lat1 += $latinc ) {
     for( my $lon1 = $lon0; $lon1 <= 270; $lon1 += $loninc ) {
       next if abs($lat1) == 90 and $lon1 > 0;
-      print "loc1 = ($lat1,$lon1)\n" if $debug;
+      print "  loc1 = ($lat1,$lon1)\n" if $debug;
       for( my $lat2 = $lat0; $lat2 <= 90; $lat2 += $latinc ) {
         for( my $lon2 = $lon0; $lon2 <= 270; $lon2 += $loninc ) {
           print "  loc2 = ($lat2,$lon2)\n" if $debug;
@@ -297,7 +297,7 @@ EOS
           $n++;
 
           test_range($r,$lat1,$lon1,$lat2,$lon2);
-          test_bearing($az,$lat1,$lon1,$lat2,$lon2);
+          test_bearing($lat1,$lon1,$lat2,$lon2);
           test_to($r,$az,$lat1,$lon1,$lat2,$lon2);
         }
       }
@@ -379,8 +379,10 @@ EOS
 
 sub test_bearing
 {
-  print "Generate bearing tests\n" if $debug;
   my( $lat1, $lon1, $lat2, $lon2 ) = @_;
+  printf "test_bearing([%.2f,%.2f]->[%.2f,%.2f])\n",
+    $lat1, $lon1, $lat2, $lon2 if $debug;
+
   my $l1 = sprintf "%.6f,%.6f", $lat1, $lon1; 
   my $l2 = sprintf "%.6f,%.6f", $lat2, $lon2;
   return if $l1 eq $l2;
@@ -390,14 +392,25 @@ sub test_bearing
   printf("p1=(%.2f,%.2f), p2=(%.2f,%.2f), bp=%.2f , bs=%.2f\n",
     $lat1,$lon1,$lat2,$lon2,$bp,$bs) if $debug;
 
-  my $code = <<EOS;
+  # skip positive test if result too near zero or 180
+  if( abs($bp) > 0.1 && abs($bp-360) > 0.1 ) {
+    my $code = <<EOS;
 \$azp = \$e_pos->bearing($l1,$l2);
 delta_within( \$azp, $bp, 0.1 );
+EOS
+    push( @{$tests{bearing}{code}}, $code );
+    ${$tests{bearing}}{count} += 1;
+  }
+
+  # skip symmetric test if result too near -180 or +180
+  if( abs($bs-180) > 0.1 && abs($bs+180) > 0.1 ) {
+    my $code = <<EOS;
 \$azs = \$e_sym->bearing($l1,$l2);
 delta_within( \$azs, $bs, 0.1 );
 EOS
-  push( @{$tests{bearing}{code}}, $code );
-  ${$tests{bearing}}{count} += 2;
+    push( @{$tests{bearing}{code}}, $code );
+    ${$tests{bearing}}{count} += 1;
+  }
 }
 
 sub test_forward
