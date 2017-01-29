@@ -204,6 +204,6 @@ ok( $e21->isa( 'Geo::Ellipsoid' ) );
 ok( $e21->{ellipsoid} eq 'SPHERE' );
 delta_ok( $e21->{equatorial}, 6378137 );
 delta_ok( $e21->{polar}, 6378137 );
-delta_ok( $e21->{flattening}, 0 );
+delta_within( $e21->{flattening}, 0, 1e-6 );
 ok( exists $Geo::Ellipsoid::ellipsoids{'SPHERE'} );
 
