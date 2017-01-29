@@ -13,8 +13,13 @@ To install this module, run the following commands:
 
 RELEASE NOTES
 
-This is version 1.0. 
-Methods are now guaranteed to return angle values in the range [0,2pi).
+This is version 1.10. 
+
+Methods are now guaranteed to return angle values in the range [0,2pi) or
+[-pi,pi). The output range may be selected with arguments to the new() 
+constructor method or by calling the set_longitude_symmetric or 
+set_bearing_symmetric methods.
+
 Perls older than 5.6 are not supported.
 
 This module is a port of existing Fortran subroutines to Perl.
