@@ -26,11 +26,11 @@ the surface of an ellipsoid.
 
 =head1 VERSION
 
-Version 1.10, released June 30, 2008.
+Version 1.11, released July 1, 2008.
 
 =cut
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
@@ -944,7 +944,7 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-Geo::Distance, Geo::Ellipsoids
+Geo::Distance, Geo::Ellipsoids, Geo::Forward
 
 =cut
 
