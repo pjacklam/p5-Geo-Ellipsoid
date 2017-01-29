@@ -2,5 +2,3 @@ TODO list for Perl module Geo::Ellipsoid
 
 - Figure out what to do if _forward or _inverse does not converge because
   points are opposite each other
-
-

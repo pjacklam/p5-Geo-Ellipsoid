@@ -13,7 +13,7 @@ To install this module, run the following commands:
 
 RELEASE NOTES
 
-This is version 1.12. 
+This is version 1.13. 
 
 Methods are now guaranteed to return angle values in the range [0,2pi) or
 [-pi,pi). The output range may be selected with arguments to the new() 
@@ -27,6 +27,8 @@ This module is a port of existing Fortran subroutines to Perl.
 COPYRIGHT AND LICENCE
 
 Copyright (C) 2005-2008 Jim Gibson
+
+Copyright (C) 2016 Peter John Acklam
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

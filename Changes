@@ -5,7 +5,7 @@ Revision history for Perl module Geo::Ellipsoid
 
 0.9 Fri Oct 28 2005
     - first version uploaded to PAUSE
-   
+
 0.901 Mon Oct 31 2005
     1. Add Test::Number::Delta to prerequisites in Makefile.PL.
     2. Include correct README file.
@@ -37,7 +37,7 @@ Revision history for Perl module Geo::Ellipsoid
     4. Fix tests expecting 360 degrees for angles; change to 0.
 
 1.1 Sun Jun 30 2008
-    1. Added set_longitude_symmetric, set_bearing_symmetric, and 
+    1. Added set_longitude_symmetric, set_bearing_symmetric, and
        set_distance_unit methods
     2. Corrected example of at method in documentation
     3. Ensured no test too close to range boundaries (0,360 or -180,180)
@@ -48,3 +48,10 @@ Revision history for Perl module Geo::Ellipsoid
 1.2 Fri Jul 4 2008
     1. Correct bearing tests in 09-bearing.t
 
+
+1.13
+    1. Use OO syntax to make subclassing possible.
+    2. Add test file t/11-subclass.t
+    3. Update require version of Test::More to 0.47.
+    4. Minor POD changes.
+    5. Clean up whitespace.
