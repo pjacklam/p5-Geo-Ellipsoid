@@ -13,7 +13,7 @@ To install this module, run the following commands:
 
 RELEASE NOTES
 
-This is version 1.10. 
+This is version 1.11. 
 
 Methods are now guaranteed to return angle values in the range [0,2pi) or
 [-pi,pi). The output range may be selected with arguments to the new() 
