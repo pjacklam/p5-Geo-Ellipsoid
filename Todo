@@ -1,5 +1,6 @@
 TODO list for Perl module Geo::Ellipsoid
 
-- Nothing yet
+- Figure out what to do if _forward or _inverse does not converge because
+  points are opposite each other
 
 

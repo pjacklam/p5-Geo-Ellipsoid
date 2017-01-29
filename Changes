@@ -28,3 +28,10 @@ Revision history for Perl module Geo::Ellipsoid
     2. Use delta_ok with relative test instead of delta_within for large
        ranges.
 
+1.0 Fri Mar 21 2008
+    1. Normalized calculated angle result from _inverse to be
+       less than 360.00 using _normalize_input subroutine.
+    2. Fixed POD error (extraneous =over)
+    3. Add 'use 5.006_00;' statement to abort Perls earlier than 5.6.0
+       because of 'our' statements.
+    4. Fix tests expecting 360 degrees for angles; change to 0.
