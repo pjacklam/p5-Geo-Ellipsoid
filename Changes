@@ -35,3 +35,12 @@ Revision history for Perl module Geo::Ellipsoid
     3. Add 'use 5.006_00;' statement to abort Perls earlier than 5.6.0
        because of 'our' statements.
     4. Fix tests expecting 360 degrees for angles; change to 0.
+
+1.1 Sun Jun 30 2008
+    1. Added set_longitude_symmetric, set_bearing_symmetric, and 
+       set_distance_unit methods
+    2. Corrected example of at method in documentation
+    3. Ensured no test too close to range boundaries (0,360 or -180,180)
+    4. Removed non-POD method headers as redundant.
+    5. Added tests for different distance units and symmetrical output
+       ranges.
