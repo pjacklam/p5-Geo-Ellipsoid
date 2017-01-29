@@ -198,6 +198,7 @@ delta_ok( $e20->{flattening}, 0.00333333333333333 );
 ok( exists $Geo::Ellipsoid::ellipsoids{'CUSTOM'} );
 
 my $e21 = Geo::Ellipsoid->new();
+warn "\nWarning about 'Infinite flattening' OK here:\n";
 $e21->set_custom_ellipsoid('sphere',6378137,0);
 ok( defined $e21 );
 ok( $e21->isa( 'Geo::Ellipsoid' ) );

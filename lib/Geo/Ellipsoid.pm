@@ -13,6 +13,7 @@ package Geo::Ellipsoid;
 
 use warnings;
 use strict;
+use 5.006_00;
 
 use Math::Trig;
 use Carp;
@@ -24,11 +25,11 @@ the surface of an ellipsoid.
 
 =head1 VERSION
 
-Version 0.904, released August 22, 2006.
+Version 1.0, released March 21, 2008.
 
 =cut
 
-our $VERSION = '0.904';
+our $VERSION = '1.0';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
@@ -69,8 +70,6 @@ other of these values, and commonly-available Global Positioning
 System (GPS) units can be set to use one or the other.
 See L<"DEFINED ELLIPSOIDS"> below for the ellipsoid survey values
 that may be selected for use by Geo::Ellipsoid.
-
-=over
 
 =cut
 
@@ -216,7 +215,9 @@ sub set_ellipsoid
 =head2 set_custom_ellipsoid
 
 Sets the ellipsoid parameters to the specified ( major semiaxis and
-reciprocal flattening.
+reciprocal flattening. A zero value for the reciprocal flattening
+will result in a sphere for the ellipsoid, and a warning message 
+will be issued.
 
     $geo->set_custom_ellipsoid( 'sphere', 6378137, 0 );
     
@@ -282,8 +283,13 @@ sub scales
   my $self = shift;
   my $units = $self->{units};
   my $lat = $_[0];
-  $lat /= $degrees_per_radian if( $units eq 'degrees' );
-
+  if( defined $lat ) {
+    $lat /= $degrees_per_radian if( $units eq 'degrees' );
+  }else{
+    carp("scales() method requires latitude argument; assuming 0");
+    $lat = 0;
+  }
+  
   my $aa = $self->{equatorial};
   my $bb = $self->{polar};
   my $a2 = $aa*$aa;
@@ -325,14 +331,7 @@ as latitude, longitude pairs.
 sub range
 {
   my $self = shift;
-  my $units = $self->{units};  
-  my @args = (@_);
-  @args = map {
-    $_ = deg2rad($_) if $units eq 'degrees';
-    $_ += $twopi if $_ < 0; 
-    $_ 
-  } @args;
-
+  my @args = _normalize_input($self->{units},@_);
   my($range,$bearing) = _inverse($self,@args);
   print "inverse(@_[1..4]) returns($range,$bearing)\n" if $DEBUG;
   return $range;
@@ -354,13 +353,8 @@ the second. Zero bearing is true north.
 sub bearing
 {
   my $self = shift;
-  my $units = $self->{units};  
-  my @args = (@_);
-  @args = map {
-    $_ = deg2rad($_) if $units eq 'degrees';
-    $_ += $twopi if $_ < 0; 
-    $_ 
-  } @args;
+  my $units = $self->{units};
+  my @args = _normalize_input($units,@_);
   my($range,$bearing) = _inverse($self,@args);
   print "inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   return ( $units eq 'radians' ? $bearing : ( $bearing * $degrees_per_radian));
@@ -385,13 +379,11 @@ sub at
 {
   my $self = shift;
   my $units = $self->{units};
-  my( $lat, $lon, $r, $az ) = @_;
-  if( $units eq 'degrees' ) {
-    $lat /= $degrees_per_radian;
-    $lon /= $degrees_per_radian;
-    $az /= $degrees_per_radian;
-  }
+  my( $lat, $lon, $az ) = _normalize_input($units,@_[0,1,3]);
+  my $r = $_[2];
+  print "at($lat,$lon,$r,$az)\n" if $DEBUG;
   my( $lat2, $lon2 ) = _forward($self,$lat,$lon,$r,$az);
+  print "_forward returns ($lat2,$lon2)\n" if $DEBUG; 
   if( $units eq 'degrees' ) {
     $lat2 *= $degrees_per_radian;
     $lon2 *= $degrees_per_radian;
@@ -419,14 +411,9 @@ In scalar context, returns just the range.
 sub to
 {
   my $self = shift;
-  my $units = $self->{units};  
-  my @args = (@_);
+  my $units = $self->{units};
+  my @args = _normalize_input($units,@_);
   print "to($units,@args)\n" if $DEBUG;
-  @args = map {
-    $_ = deg2rad($_) if $units eq 'degrees';
-    $_ += $twopi if $_ < 0; 
-    $_ 
-  } @args;
   my($range,$bearing) = _inverse($self,@args);
   print "to: inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   $bearing *= $degrees_per_radian if $units eq 'degrees';
@@ -456,13 +443,8 @@ or more, the concept of X and Y on a curved surface loses its meaning.
 sub displacement
 {
   my $self = shift;
-  my $units = $self->{units};  
-  my @args = (@_);
-  @args = map {
-    $_ = deg2rad($_) if $units eq 'degrees';
-    $_ += $twopi if $_ < 0; 
-    $_ 
-  } @args;
+  print "displacement(",join(',',@_),"\n" if $DEBUG;
+  my @args = _normalize_input($self->{units},@_);
   print "call _inverse(@args)\n" if $DEBUG;
   my( $range, $bearing ) = _inverse($self,@args);
   print "disp: _inverse(@args) returns ($range,$bearing)\n" if $DEBUG;
@@ -490,12 +472,6 @@ sub location
   my $self = shift;
   my $units = $self->{units};
   my($lat,$lon,$x,$y) = @_;
-  #my( $lat, $lon ) = map {
-  #  $_ = deg2rad($_) if $units eq 'degrees';
-  #  $_ += $twopi if $_ < 0; 
-  #  $_
-  #} @args[0,1];
-  #my( $x, $y ) = @args[2,3];
   my $range = sqrt( $x*$x+ $y*$y );
   my $bearing = atan2($x,$y);
   $bearing *= $degrees_per_radian if $units eq 'degrees';
@@ -613,6 +589,7 @@ sub _inverse()
   
   # adjust azimuth to (0,360)
   $faz += $twopi if $faz < 0;
+  $faz -= $twopi if $faz >= $twopi;
 
   # return result
   my @disp = ( $s, $faz );
@@ -620,6 +597,12 @@ sub _inverse()
   return @disp;
 }
 
+#	_forward
+#
+#	Calculate the location (latitue,longitude) of a point
+#	given a starting point and a displacement from that
+#	point as (range,bearing)
+#
 sub _forward
 {
   my $self = shift;
@@ -693,6 +676,25 @@ sub _forward
 
 }
 
+#	_normalize_input
+#
+#	Normalize a set of input angle values by converting to
+#	radians if given in degrees and by converting to the
+#	range [0,2pi), i.e. greater than or equal to zero and
+#	less than two pi.
+#
+sub _normalize_input
+{
+  my $units = shift;
+  my @args = @_;
+  return map {
+    $_ = deg2rad($_) if $units eq 'degrees';
+    while( $_ < 0 ) { $_ += $twopi }
+    while( $_ >= $twopi ) { $_ -= $twopi }
+    $_
+  } @args;
+}  
+
 =head1 DEFINED ELLIPSOIDS
 
 The following ellipsoids are defined in Geo::Ellipsoid, with the 
@@ -757,7 +759,7 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Ellipsoid>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2006 Jim Gibson, all rights reserved.
+Copyright 2005-2008 Jim Gibson, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
