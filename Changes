@@ -20,6 +20,11 @@ Revision history for Perl module Geo::Ellipsoid
     6. Use package $DEBUG instead of instance $self->{debug} for debug.
     7. Don't test bearing angle between points when the same.
 
-0.903 Sat Aug 19 3006
+0.903 Sat Aug 19 2006
     1. Change test for zero flattening to use delta_within instead of delta_ok
+
+0.904 Tue Aug 22 2006
+    1. Eliminate tests using points too far away.
+    2. Use delta_ok with relative test instead of delta_within for large
+       ranges.
 
