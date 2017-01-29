@@ -10,3 +10,12 @@ Revision history for Perl module Geo::Ellipsoid
     1. Add Test::Number::Delta to prerequisites in Makefile.PL.
     2. Include correct README file.
     3. Correct version number in Ellipsoid.pm POD.
+
+0.902 Fri Nov 4 2005
+    1. Change WGS84 flattening value to 298.257223563.
+    2. Add set_defaults package method (and tests).
+    3. Add 'IAU76' to POD section on DEFINED ELLIPSOIDS
+    4. Croak on invalid ellipsoid or units.
+    5. Don't change defaults except by set_defaults.
+    6. Use package $DEBUG instead of instance $self->{debug} for debug.
+    7. Don't test bearing angle between points when the same.

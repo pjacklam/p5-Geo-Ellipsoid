@@ -13,8 +13,8 @@ To install this module, run the following commands:
 
 RELEASE NOTES
 
-This is version 0.901. This module is a port of existing Fortran subroutines
-to Perl.
+This is version 0.902. 
+This module is a port of existing Fortran subroutines to Perl.
 
 COPYRIGHT AND LICENCE
 

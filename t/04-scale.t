@@ -3,9 +3,10 @@
 use Test::More tests => 180;
 use Test::Number::Delta relative => 1e-6;
 use Geo::Ellipsoid;
-#use blib;
+use blib;
 use strict;
 use warnings;
+
 my $e = Geo::Ellipsoid->new( units => 'degrees' );
 my( $xs, $ys );
 ( $ys, $xs ) = $e->scales(0);
