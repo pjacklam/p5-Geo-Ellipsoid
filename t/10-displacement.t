@@ -3,9 +3,10 @@
 use Test::More tests => 200;
 use Test::Number::Delta relative => 1e-6;
 use Geo::Ellipsoid;
-#use blib;
+use blib;
 use strict;
 use warnings;
+
 my $e = Geo::Ellipsoid->new(units=>'degrees');
 my( $x, $y );
 ($x, $y) = $e->displacement(-38.369163,190.874558,-38.365617,190.880663);

@@ -24,11 +24,11 @@ the surface of an ellipsoid.
 
 =head1 VERSION
 
-Version 0.901, released October, 2005.
+Version 0.902, released November 4, 2005.
 
 =cut
 
-our $VERSION = '0.901';
+our $VERSION = '0.902';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
@@ -74,17 +74,13 @@ that may be selected for use by Geo::Ellipsoid.
 
 =cut
 
-# constants
-
-#use constant degrees_per_radian => 180/pi;
-
 # class data and constants
 our $degrees_per_radian = 180/pi;
 our $eps = 1.0e-23;
 our $max_loop_count = 20;
 our $twopi = 2 * pi;
 our $halfpi = pi/2;
-our %defaults = ( ellipsoid => 'WGS84', units => 'radians', debug => $DEBUG );
+our %defaults = ( ellipsoid => 'WGS84', units => 'radians' );
 
 # set of ellipsoids that can be used.
 # values are 
@@ -94,7 +90,7 @@ our %defaults = ( ellipsoid => 'WGS84', units => 'radians', debug => $DEBUG );
 #     polar radius = equatorial radius * ( 1 - f )
 
 our %ellipsoids = (
-    'WGS84'              => [ 6378137.0,   298.25722210088 ],
+    'WGS84'              => [ 6378137.0,   298.257223563   ],
     'AIRY'               => [ 6377563.396, 299.3249646     ],
     'AIRY-MODIFIED'      => [ 6377340.189, 299.3249646     ],
     'AUSTRALIAN'         => [ 6378160.0,   298.25          ],
@@ -122,7 +118,7 @@ our %ellipsoids = (
 
 The new() constructor may be called with a hash list to set the value of the
 ellipsoid to be used and the value of the units to be used for angles. 
-The default constructor is equivalent to the following:
+The initial default constructor is equivalent to the following:
 
     my $geo = Geo::Ellipsoid->new( 
       ellipsoid => 'WGS84', 
@@ -130,8 +126,8 @@ The default constructor is equivalent to the following:
     );
     
 The constructor arguments may be of any case and, with the exception of
-the ellipsoid value, abbreviated to their first
-three characters. Thus, ( UNI => 'DEG', ell => 'NAD27' ) is valid. 
+the ellipsoid value, abbreviated to their first three characters. 
+Thus, ( UNI => 'DEG', ell => 'NAD27' ) is valid. 
 
 =cut
 
@@ -144,14 +140,12 @@ sub new
       $self->{ellipsoid} = uc $args{$key};
     }elsif( $key =~ /^uni/i ) {
       $self->{units} = $args{$key};
-    }elsif( $key =~ /^deb/i ) {
-      $self->{debug} = $args{$key};
     }
   }
   set_units($self,$self->{units});
   set_ellipsoid($self,$self->{ellipsoid});
-  print "Ellipsoid(units=>$self->{units},ellipsoid=>$self->{ellipsoid}," .
-    "debug=>$self->{debug})\n" if $self->{debug};
+  print "Ellipsoid(units=>$self->{units},ellipsoid=>$self->{ellipsoid})\n" 
+    if $DEBUG;
   bless $self,$class;
   return $self;
 }
@@ -176,10 +170,11 @@ sub set_units
   my $units = shift;
   if( $units =~ /deg/i ) {
     $units = 'degrees';
-  }else{
-    carp("Invalid units specifier '$units' - using radians") 
-      unless $units =~ /rad/i;
+  }elsif( $units =~ /rad/i ) {
     $units = 'radians';
+  }else{
+    croak("Invalid units specifier '$units' - please use either " .
+      "degrees or radians (the default)") unless $units =~ /rad/i;
   }
   $self->{units} = $units;
 }
@@ -198,12 +193,11 @@ sub set_ellipsoid
 {
   my $self = shift;
   my $ellipsoid = uc shift || $defaults{ellipsoid};
-  print "  set ellipsoid to $ellipsoid\n" if $self->{debug};
+  print "  set ellipsoid to $ellipsoid\n" if $DEBUG;
   unless( exists $ellipsoids{$ellipsoid} ) {
-    carp("Ellipsoid $ellipsoid does not exist; defaulting to WGS84");
-    $ellipsoid = 'WGS84';
+    croak("Ellipsoid $ellipsoid does not exist - please use " .
+      "set_custom_ellipsoid to use an ellipsoid not in valid set");
   }
-  $defaults{ellipsoid} = $ellipsoid;	# reset default
   $self->{ellipsoid} = $ellipsoid;
   my( $major, $recip ) = @{$ellipsoids{$ellipsoid}};
   $self->{equatorial} = $major;
@@ -234,12 +228,39 @@ sub set_custom_ellipsoid
   my $self = shift;
   my( $name, $major, $recip ) = @_;
   $name = uc $name;
+  $recip = 0 unless defined $recip;
   if( $major ) {
     $ellipsoids{$name} = [ $major, $recip ];
-  }else{  carp("set_custom_ellipsoid called without semi-major " .
-      "parameter -- using default $defaults{ellipsoid}");
+  }else{  
+    croak("set_custom_ellipsoid called without semi-major radius parameter");
   }
   set_ellipsoid($self,$name);
+}
+
+=head2 set_defaults
+
+Sets the defaults for the new method. Call with a hash similar to new.
+
+    $Geo::Ellipsoid->set_defaults( 
+      units => 'degrees', 
+      ellipsoid => 'GRS80 
+    );
+
+=cut
+
+sub set_defaults
+{
+  my $self = shift;
+  my %args = @_;
+  foreach my $key ( keys %args ) {
+    if( $key =~ /^ell/i ) {
+      $defaults{ellipsoid} = uc $args{$key};
+    }elsif( $key =~ /^uni/i ) {
+      $defaults{units} = $args{$key};
+    }
+  }
+  print "Defaults set to ($defaults{ellipsoid},$defaults{units}\n"
+    if $DEBUG;
 }
 
 =head2 scales
@@ -274,7 +295,7 @@ sub scales
   my $latscl = ( $n1 * $n1 ) / ( $d3 * $d4 );
   my $lonscl = ( $aa * $d1 ) / ( $d4 );
   
-  if( $self->{debug} ) {
+  if( $DEBUG ) {
     print "lat=$lat, aa=$aa, bb=$bb\nd1=$d1, d2=$d2, d3=$d3, d4=$d4\n";
     print "latscl=$latscl, lonscl=$lonscl\n";
   }
@@ -312,7 +333,7 @@ sub range
   } @args;
 
   my($range,$bearing) = _inverse($self,@args);
-  print "inverse(@_[1..4]) returns($range,$bearing)\n" if $self->{debug};
+  print "inverse(@_[1..4]) returns($range,$bearing)\n" if $DEBUG;
   return $range;
 }
 
@@ -340,7 +361,7 @@ sub bearing
     $_ 
   } @args;
   my($range,$bearing) = _inverse($self,@args);
-  print "inverse(@args) returns($range,$bearing)\n" if $self->{debug};
+  print "inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   return ( $units eq 'radians' ? $bearing : ( $bearing * $degrees_per_radian));
 }
 
@@ -399,14 +420,14 @@ sub to
   my $self = shift;
   my $units = $self->{units};  
   my @args = (@_);
-  print "to($units,@args)\n" if $self->{debug};
+  print "to($units,@args)\n" if $DEBUG;
   @args = map {
     $_ = deg2rad($_) if $units eq 'degrees';
     $_ += $twopi if $_ < 0; 
     $_ 
   } @args;
   my($range,$bearing) = _inverse($self,@args);
-  print "to: inverse(@args) returns($range,$bearing)\n" if $self->{debug};
+  print "to: inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   $bearing *= $degrees_per_radian if $units eq 'degrees';
   if( wantarray() ) {
     return ( $range, $bearing );
@@ -441,9 +462,9 @@ sub displacement
     $_ += $twopi if $_ < 0; 
     $_ 
   } @args;
-  print "call _inverse(@args)\n" if $self->{debug};
+  print "call _inverse(@args)\n" if $DEBUG;
   my( $range, $bearing ) = _inverse($self,@args);
-  print "disp: _inverse(@args) returns ($range,$bearing)\n" if $self->{debug};
+  print "disp: _inverse(@args) returns ($range,$bearing)\n" if $DEBUG;
   my $x = $range * sin($bearing);
   my $y = $range * cos($bearing);
   return ($x,$y);
@@ -477,7 +498,7 @@ sub location
   my $range = sqrt( $x*$x+ $y*$y );
   my $bearing = atan2($x,$y);
   $bearing *= $degrees_per_radian if $units eq 'degrees';
-  print "location($lat,$lon,$x,$y,$range,$bearing)\n" if $self->{debug};
+  print "location($lat,$lon,$x,$y,$range,$bearing)\n" if $DEBUG;
   return $self->at($lat,$lon,$range,$bearing);
 }
 
@@ -498,7 +519,7 @@ sub _inverse()
 {
   my $self = shift;
   my( $lat1, $lon1, $lat2, $lon2 ) = (@_);
-  print "_inverse($lat1,$lon1,$lat2,$lon2)\n" if $self->{debug};
+  print "_inverse($lat1,$lon1,$lat2,$lon2)\n" if $DEBUG;
   
   my $a = $self->{equatorial};
   my $f = $self->{flattening};
@@ -514,7 +535,7 @@ sub _inverse()
   my $faz = $baz * $tu1;
   my $dlon = $lon2 - $lon1;
   
-  if( $self->{debug} ) {
+  if( $DEBUG ) {
     printf "lat1=%.8f, lon1=%.8f\n", $lat1, $lon1; 
     printf "lat2=%.8f, lon2=%.8f\n", $lat2, $lon2;
     printf "r=%.8f, tu1=%.8f, tu2=%.8f\n", $r, $tu1, $tu2;
@@ -523,17 +544,17 @@ sub _inverse()
   
   my $x = $dlon;
   my $cnt = 0;
-  print "enter loop:\n" if $self->{debug};
+  print "enter loop:\n" if $DEBUG;
   my( $c2a, $c, $cx, $cy, $cz, $d, $del, $e, $sx, $sy, $y );
   do {
-    printf "  x=%.8f\n", $x if $self->{debug};
+    printf "  x=%.8f\n", $x if $DEBUG;
     $sx = sin($x);
     $cx = cos($x);
     $tu1 = $cu2*$sx;
     $tu2 = $baz - ($su1*$cu2*$cx);
   
     printf "    sx=%.8f, cx=%.8f, tu1=%.8f, tu2=%.8f\n", 
-      $sx, $cx, $tu1, $tu2 if $self->{debug};
+      $sx, $cx, $tu1, $tu2 if $DEBUG;
   
     $sy = sqrt( $tu1*$tu1 + $tu2*$tu2 );
     $cy = $s*$cx + $faz;
@@ -546,7 +567,7 @@ sub _inverse()
     }
   
     printf "    sy=%.8f, cy=%.8f, y=%.8f, sa=%.8f\n", $sy, $cy, $y, $sa
-      if $self->{debug};
+      if $DEBUG;
   
     $c2a = 1.0 - ($sa*$sa);
     $cz = $faz + $faz;
@@ -560,7 +581,7 @@ sub _inverse()
     $x = ( 1.0 - $c ) * $x * $f + $dlon;
     $del = $d - $x;
   
-    if( $self->{debug} ) {
+    if( $DEBUG ) {
       printf "    c2a=%.8f, cz=%.8f\n", $c2a, $cz;
       printf "    e=%.8f, d=%.8f\n", $e, $d;
       printf "    (d-x)=%.8g\n", $del;
@@ -577,7 +598,7 @@ sub _inverse()
   $d = ((0.375*$x*$x) - 1.0)*$x;
   $x = $e*$cy;
   
-  if( $self->{debug} ) {
+  if( $DEBUG ) {
     printf "e=%.8f, cy=%.8f, x=%.8f\n", $e, $cy, $x;
     printf "sy=%.8f, c=%.8f, d=%.8f\n", $sy, $c, $d;
     printf "cz=%.8f, a=%.8f, r=%.8f\n", $cz, $a, $r;
@@ -587,14 +608,14 @@ sub _inverse()
   $s = (((((((( $sy * $sy * 4.0 ) - 3.0) * $s * $cz * $d/6.0) - $x) * 
     $d /4.0) + $cz) * $sy * $d) + $y ) * $c * $a * $r;
   
-  printf "s=%.8f\n", $s if $self->{debug};
+  printf "s=%.8f\n", $s if $DEBUG;
   
   # adjust azimuth to (0,360)
   $faz += $twopi if $faz < 0;
 
   # return result
   my @disp = ( $s, $faz );
-  print "disp = (@disp)\n" if $self->{debug};
+  print "disp = (@disp)\n" if $DEBUG;
   return @disp;
 }
 
@@ -603,7 +624,7 @@ sub _forward
   my $self = shift;
   my( $lat1, $lon1, $range, $bearing ) = @_;
 
-  if( $self->{debug} ) {
+  if( $DEBUG ) {
     printf "_forward(lat1=%.8f,lon1=%.8f,range=%.8f,bearing=%.8f)\n",
       $lat1, $lon1, $range, $bearing;
   }
@@ -635,7 +656,7 @@ sub _forward
   $tu = (($s/$r)/$a)/$c;
   my $y = $tu;
 
-  if( $self->{debug} ) {
+  if( $DEBUG ) {
     printf "r=%.8f, tu=%.8f, faz=%.8f\n", $r, $tu, $faz;
     printf "baz=%.8f, sf=%.8f, cf=%.8f\n", $baz, $sf, $cf;
     printf "cu=%.8f, su=%.8f, sa=%.8f\n", $cu, $su, $sa; 
@@ -679,7 +700,7 @@ The default ellipsoid is WGS84.
 
     Ellipsoid        Semi-Major Axis (m.)     1/Flattening
     ---------        -------------------     ---------------
-    WGS84                6378137.0           298.25722210088
+    WGS84                6378137.0           298.257223563
     NAD27                6378206.4           294.9786982138
     AIRY                 6377563.396         299.3249646
     AIRY-MODIFIED        6377340.189         299.3249646
@@ -692,6 +713,7 @@ The default ellipsoid is WGS84.
     FISHER-1968          6378150.0           298.3
     HOUGH-1956           6378270.0           297.0
     HAYFORD              6378388.0           297.0
+    IAU76                6378140.0           298.257
     KRASSOVSKY-1938      6378245.0           298.3
     NWL-9D               6378145.0           298.25
     SOUTHAMERICAN-1969   6378160.0           298.25

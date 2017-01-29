@@ -3,9 +3,10 @@
 use Test::More tests => 200;
 use Test::Number::Delta relative => 1e-6;
 use Geo::Ellipsoid;
-#use blib;
+use blib;
 use strict;
 use warnings;
+
 my $e = Geo::Ellipsoid->new(units=>'degrees');
 my( $lat, $lon );
 ($lat, $lon) = $e->location(-38.369163,190.874558,533.491111,393.690590);

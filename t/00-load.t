@@ -3,9 +3,10 @@
 use Test::More tests => 13;
 use Test::Number::Delta relative => 1e-6;
 use Geo::Ellipsoid;
-#use blib;
+use blib;
 use strict;
 use warnings;
+
 BEGIN { use_ok( 'Geo::Ellipsoid' ); }
 my $e = Geo::Ellipsoid->new();
 isa_ok( $e, 'Geo::Ellipsoid');
