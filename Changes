@@ -19,3 +19,7 @@ Revision history for Perl module Geo::Ellipsoid
     5. Don't change defaults except by set_defaults.
     6. Use package $DEBUG instead of instance $self->{debug} for debug.
     7. Don't test bearing angle between points when the same.
+
+0.903 Sat Aug 19 3006
+    1. Change test for zero flattening to use delta_within instead of delta_ok
+

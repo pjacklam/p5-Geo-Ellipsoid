@@ -24,11 +24,11 @@ the surface of an ellipsoid.
 
 =head1 VERSION
 
-Version 0.902, released November 4, 2005.
+Version 0.903, released August 19, 2006.
 
 =cut
 
-our $VERSION = '0.902';
+our $VERSION = '0.903';
 our $DEBUG = 0;
 
 =head1 SYNOPSIS
@@ -90,7 +90,6 @@ our %defaults = ( ellipsoid => 'WGS84', units => 'radians' );
 #     polar radius = equatorial radius * ( 1 - f )
 
 our %ellipsoids = (
-    'WGS84'              => [ 6378137.0,   298.257223563   ],
     'AIRY'               => [ 6377563.396, 299.3249646     ],
     'AIRY-MODIFIED'      => [ 6377340.189, 299.3249646     ],
     'AUSTRALIAN'         => [ 6378160.0,   298.25          ],
@@ -110,6 +109,7 @@ our %ellipsoids = (
     'SOUTHAMERICAN-1969' => [ 6378160.0,   298.25          ],
     'SOVIET-1985'        => [ 6378136.0,   298.257         ],
     'WGS72'              => [ 6378135.0,   298.26          ],
+    'WGS84'              => [ 6378137.0,   298.257223563   ],
 );
 
 =head1 CONSTRUCTOR
@@ -154,11 +154,10 @@ sub new
 
 =head2 set_units
 
-Set the units used by the Geo::Ellipsoid object. The units may also be
-set in the constructor of the object. The allowable values are 'degrees'
-or 'radians'. The default is 'radians'. The units value is not case
-sensitive and may be abbreviated to 3 letters. An invalid value will
-be accepted as 'radians'.
+Set the angle units used by the Geo::Ellipsoid object. The units may 
+also be set in the constructor of the object. The allowable values are 
+'degrees' or 'radians'. The default is 'radians'. The units value is 
+not case sensitive and may be abbreviated to 3 letters.
 
     $geo->set_units('degrees');
 
@@ -257,6 +256,8 @@ sub set_defaults
       $defaults{ellipsoid} = uc $args{$key};
     }elsif( $key =~ /^uni/i ) {
       $defaults{units} = $args{$key};
+    }else{  
+      croak("Geo::Ellipsoid::set_defaults called with invalid key: $key");
     }
   }
   print "Defaults set to ($defaults{ellipsoid},$defaults{units}\n"
@@ -700,8 +701,6 @@ The default ellipsoid is WGS84.
 
     Ellipsoid        Semi-Major Axis (m.)     1/Flattening
     ---------        -------------------     ---------------
-    WGS84                6378137.0           298.257223563
-    NAD27                6378206.4           294.9786982138
     AIRY                 6377563.396         299.3249646
     AIRY-MODIFIED        6377340.189         299.3249646
     AUSTRALIAN           6378160.0           298.25
@@ -711,16 +710,17 @@ The default ellipsoid is WGS84.
     EVEREST-MODIFIED     6377304.063         290.8017
     FISHER-1960          6378166.0           298.3
     FISHER-1968          6378150.0           298.3
+    GRS80                6378137.0           298.25722210088
     HOUGH-1956           6378270.0           297.0
     HAYFORD              6378388.0           297.0
     IAU76                6378140.0           298.257
     KRASSOVSKY-1938      6378245.0           298.3
+    NAD27                6378206.4           294.9786982138
     NWL-9D               6378145.0           298.25
     SOUTHAMERICAN-1969   6378160.0           298.25
     SOVIET-1985          6378136.0           298.257
     WGS72                6378135.0           298.26
-    GRS80                6378137.0           298.25722210088
-
+    WGS84                6378137.0           298.257223563
 
 =head1 LIMITATIONS
 
@@ -749,21 +749,15 @@ Jim Gibson, C<< <Jim@Gibson.org> >>
 
 =head1 BUGS
 
-This version cannot handle points that are too near to the poles, for
-some of the methods, or points which are anti-podal, that is on 
-opposite sides of the earth. In this case, the iterative algorithms
-will not converge, a warning message will be emitted, and undefined
-values will be returned.
+See LIMITATIONS, above.
 
 Please report any bugs or feature requests to
 C<bug-geo-ellipsoid@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Ellipsoid>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005 Jim Gibson, all rights reserved.
+Copyright 2005-2006 Jim Gibson, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
