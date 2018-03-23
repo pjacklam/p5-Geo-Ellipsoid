@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Add test file t/release-test-version.t.
+
  - Update README file.
 
  - Add default MANIFEST.SKIP from ExtUtils::Manifest.
