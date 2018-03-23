@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Add default MANIFEST.SKIP from ExtUtils::Manifest.
+
  - Fix typos in POD.
 
  - Remove code that is never executed.
