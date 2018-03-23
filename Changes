@@ -1,5 +1,8 @@
 1.15 Not Released
 
+ - Use more of the functionality in Test::More. This gives us more informative
+   output if tests fail.
+
  - Rename the following object properties:
 
       "latitude"  -> "latitude_symmetric"
