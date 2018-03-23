@@ -39,12 +39,29 @@ our $DEBUG = 0;
 =head1 SYNOPSIS
 
   use Geo::Ellipsoid;
-  $geo = Geo::Ellipsoid->new(ellipsoid=>'NAD27', units=>'degrees');
+
+  $geo = Geo::Ellipsoid->new(ellipsoid=>'NAD27',
+                             units=>'degrees');
+
   @origin = ( 37.619002, -122.374843 );    # SFO
   @dest = ( 33.942536, -118.408074 );      # LAX
+
+  # range and bearing from one location to another
+
   ( $range, $bearing ) = $geo->to( @origin, @dest );
+  $range = $geo->range( @origin, @dest );
+  $bearing = $geo->bearing( @origin, @dest );
+
+  # destination given start point, range, and bearing
+
   ($lat,$lon) = $geo->at( @origin, 2000, 45.0 );
-  ( $x, $y ) = $geo->displacement( @origin, $lat, $lon );
+
+  # approximate displacement given one location and a destination
+
+  ( $x, $y ) = $geo->displacement( @origin, @dest );
+
+  # approximate location given one location and displacement
+
   @pos = $geo->location( $lat, $lon, $x, $y );
 
 =head1 DESCRIPTION

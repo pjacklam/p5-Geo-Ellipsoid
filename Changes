@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Add more information to the SYNOPSIS.
+
  - Increment version number.
 
  - Update BUGS and SUPPORT sections in the POD.
