@@ -1,5 +1,8 @@
 1.15 Not Released
 
+ - Remove range reduction in _normalize_input(). The trigonometric functions do
+   more accurate range reduction than we do.
+
  - Add test file t/release-pod-syntax.t
 
  - In POD, use =item for methods, as this is more common than =head2.

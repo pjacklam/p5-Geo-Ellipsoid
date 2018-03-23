@@ -879,8 +879,6 @@ sub _normalize_input
   my @args = @_;
   return map {
     $_ = deg2rad($_) if $units eq 'degrees';
-    while( $_ < 0 ) { $_ += $twopi }
-    while( $_ >= $twopi ) { $_ -= $twopi }
     $_
   } @args;
 }
