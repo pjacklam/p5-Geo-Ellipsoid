@@ -27,11 +27,11 @@ Geo::Ellipsoid - Longitude and latitude calculations using an ellipsoid model.
 
 =head1 VERSION
 
-Version 1.14, released Sun Sep 18 2016.
+Version 1.15, not released.
 
 =cut
 
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 our $DEBUG = 0;
 
 =pod
