@@ -973,8 +973,42 @@ Jim Gibson, C<< <Jim@Gibson.org> >> (original author)
 See LIMITATIONS, above.
 
 Please report any bugs or feature requests to
-C<bug-geo-ellipsoid@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Ellipsoid>.
+C<bug-geo-ellipsoidmath-bigint at rt.cpan.org>, or through the web interface at
+L<https://rt.cpan.org/Ticket/Create.html?Queue=Geo-Ellipsoid> (requires login).
+I will be notified, and then you'll automatically be notified of progress on
+your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Geo::Ellipsoid
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker (report bugs here)
+
+L<https://rt.cpan.org/Dist/Display.html?Name=Geo-Ellipsoid>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Geo-Ellipsoid>
+
+=item * CPAN Ratings
+
+L<http://annocpan.org/dist/Geo-Ellipsoid>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Geo-Ellipsoid/>
+
+=item * CPAN Testers Matrix
+
+L<http://matrix.cpantesters.org/?dist=Geo-Ellipsoid>
+
+=back
 
 =head1 COPYRIGHT & LICENSE
 

@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Update BUGS and SUPPORT sections in the POD.
+
  - Update AUTHOR and COPYRIGHT information.
 
  - Remove range reduction in _normalize_input(). The trigonometric functions do
