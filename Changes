@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Don't hardcode the value of pi.
+
  - Use more of the functionality in Test::More. This gives us more informative
    output if tests fail.
 
