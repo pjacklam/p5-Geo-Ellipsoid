@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Add test file t/release-whitespaces.t and clean up whitespace.
+
  - Add test file t/release-portability.t.
 
  - Add test file t/release-test-version.t.
