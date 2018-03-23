@@ -964,7 +964,9 @@ may be obtained from
 
 =head1 AUTHOR
 
-Jim Gibson, C<< <Jim@Gibson.org> >>
+Peter John Acklam, C<< <pjacklam@online.no> >> (current maintainer)
+
+Jim Gibson, C<< <Jim@Gibson.org> >> (original author)
 
 =head1 BUGS
 
@@ -978,7 +980,7 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Ellipsoid>.
 
 Copyright 2005-2008 Jim Gibson, all rights reserved.
 
-Copyright 2016 Peter John Acklam
+Copyright 2016, 2018 Peter John Acklam
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
