@@ -1,5 +1,15 @@
 1.15 Not Released
 
+ - Rename the following object properties:
+
+      "latitude"  -> "latitude_symmetric"
+      "longitude" -> "longitude_symmetric"
+      "bearing"   -> "bearing_symmetric"
+
+   This makes them more descriptive, and they now match the methods
+   set_latitude_symmetric() and set_bearing_symmetric(). The old object
+   property names without the "_symmtric" suffix are still supported.
+
  - Add more information to the SYNOPSIS.
 
  - Increment version number.

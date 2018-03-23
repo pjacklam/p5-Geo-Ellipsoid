@@ -11,23 +11,23 @@ my $e1 = Geo::Ellipsoid->new();
 ok( $e1->{ellipsoid} eq 'WGS84' );
 ok( $e1->{units} eq 'radians' );
 ok( $e1->{distance_units} eq 'meter' );
-ok( $e1->{longitude} == 0 );
-ok( $e1->{latitude} == 1 );
-ok( $e1->{bearing} == 0 );
+ok( $e1->{longitude_symmetric} == 0 );
+ok( $e1->{latitude_symmetric} == 1 );
+ok( $e1->{bearing_symmetric} == 0 );
 $e1->set_defaults( 
   ellipsoid => 'NAD27',
   units => 'degrees', 
   distance_units => 'kilometer',
-  longitude => 1,
-  bearing => 1
+  longitude_symmetric => 1,
+  bearing_symmetric => 1
 );
 my $e2 = Geo::Ellipsoid->new();
 ok( $e2->{ellipsoid} eq 'NAD27' );
 ok( $e2->{units} eq 'degrees' );
 ok( $e2->{distance_units} eq 'kilometer' );
-ok( $e2->{longitude} == 1 );
-ok( $e2->{latitude} == 1 );
-ok( $e2->{bearing} == 1 );
+ok( $e2->{longitude_symmetric} == 1 );
+ok( $e2->{latitude_symmetric} == 1 );
+ok( $e2->{bearing_symmetric} == 1 );
 
 Geo::Ellipsoid->set_defaults(units=>'degrees',ell=>'EVEREST-1830');
 ok( $Geo::Ellipsoid::defaults{ellipsoid} eq 'EVEREST-1830' );

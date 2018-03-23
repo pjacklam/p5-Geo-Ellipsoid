@@ -104,9 +104,9 @@ our %defaults = (
   ellipsoid => 'WGS84',
   units => 'radians',
   distance_units => 'meter',
-  longitude => 0,
-  latitude => 1,        # allows use of _normalize_output
-  bearing => 0,
+  longitude_symmetric => 0,
+  latitude_symmetric  => 1,     # allows use of _normalize_output
+  bearing_symmetric   => 0,
 );
 our %distance = (
   'foot'      => 0.3048,
@@ -161,11 +161,11 @@ angles should be symmetric around zero or always greater than zero.
 The initial default constructor is equivalent to the following:
 
     my $geo = Geo::Ellipsoid->new(
-      ellipsoid => 'WGS84',
-      units => 'radians' ,
-      distance_units => 'meter',
-      longitude => 0,
-      bearing => 0,
+      ellipsoid           => 'WGS84',
+      units               => 'radians' ,
+      distance_units      => 'meter',
+      longitude_symmetric => 0,
+      bearing_symmetric   => 0,
     );
 
 The constructor arguments may be of any case and, with the exception of
@@ -188,9 +188,9 @@ sub new
     }elsif( $key =~ /^dis/i ) {
       $self->{distance_units} = $val;
     }elsif( $key =~ /^lon/i ) {
-      $self->{longitude} = $val;
+      $self->{longitude_symmetric} = $val;
     }elsif( $key =~ /^bea/i ) {
-      $self->{bearing} = $val;
+      $self->{bearing_symmetric} = $val;
     }else{
       carp("Unknown argument: $key => $val");
     }
@@ -199,12 +199,12 @@ sub new
   $self->set_ellipsoid($self->{ellipsoid});
   $self->set_units($self->{units});
   $self->set_distance_unit($self->{distance_units});
-  $self->set_longitude_symmetric($self->{longitude});
-  $self->set_bearing_symmetric($self->{bearing});
+  $self->set_longitude_symmetric($self->{longitude_symmetric});
+  $self->set_bearing_symmetric($self->{bearing_symmetric});
   print
     "Ellipsoid(units=>$self->{units},distance_units=>" .
     "$self->{distance_units},ellipsoid=>$self->{ellipsoid}," .
-    "longitude=>$self->{longitude},bearing=>$self->{bearing})\n" if $DEBUG;
+    "longitude_symmetric=>$self->{longitude_symmetric},bearing_symmetric=>$self->{bearing_symmetric})\n" if $DEBUG;
   return $self;
 }
 
@@ -396,10 +396,10 @@ sub set_longitude_symmetric
   # see if argument passed
   if( $#_ > 0 ) {
     # yes -- use value passed
-    $self->{longitude} = $sym;
+    $self->{longitude_symmetric} = $sym;
   }else{
     # no -- set to true
-    $self->{longitude} = 1;
+    $self->{longitude_symmetric} = 1;
   }
 }
 
@@ -422,10 +422,10 @@ sub set_bearing_symmetric
   # see if argument passed
   if( $#_ > 0 ) {
     # yes -- use value passed
-    $self->{bearing} = $sym;
+    $self->{bearing_symmetric} = $sym;
   }else{
     # no -- set to true
-    $self->{bearing} = 1;
+    $self->{bearing_symmetric} = 1;
   }
 }
 
@@ -437,11 +437,11 @@ Sets the defaults for the new method. Call with key, value pairs similar to
 new.
 
     $Geo::Ellipsoid->set_defaults(
-      units => 'degrees',
-      ellipsoid => 'GRS80',
-      distance_units => 'kilometer',
-      longitude => 1,
-      bearing => 0
+      units               => 'degrees',
+      ellipsoid           => 'GRS80',
+      distance_units      => 'kilometer',
+      longitude_symmetric => 1,
+      bearing_symmetric   => 0
     );
 
 Keys and string values (except for the ellipsoid identifier) may be shortened
@@ -469,9 +469,9 @@ sub set_defaults
     }elsif( $key =~ /^dis/i ) {
       $defaults{distance_units} = $val;
     }elsif( $key =~ /^lon/i ) {
-      $defaults{longitude} = $val;
+      $defaults{longitude_symmetric} = $val;
     }elsif( $key =~ /^bea/i ) {
-      $defaults{bearing} = $val;
+      $defaults{bearing_symmetric} = $val;
     }else{
       croak("Geo::Ellipsoid::set_defaults called with invalid key: $key");
     }
@@ -571,7 +571,7 @@ sub bearing
   my($range,$bearing) = $self->_inverse(@args);
   print "inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   my $t = $bearing;
-  $self->_normalize_output('bearing',$bearing);
+  $self->_normalize_output('bearing_symmetric',$bearing);
   print "_normalize_output($t) returns($bearing)\n" if $DEBUG;
   return $bearing;
 }
@@ -596,8 +596,8 @@ sub at
   print "at($lat,$lon,$r,$az)\n" if $DEBUG;
   my( $lat2, $lon2 ) = $self->_forward($lat,$lon,$r,$az);
   print "_forward returns ($lat2,$lon2)\n" if $DEBUG;
-  $self->_normalize_output('longitude',$lon2);
-  $self->_normalize_output('latitude',$lat2);
+  $self->_normalize_output('longitude_symmetric',$lon2);
+  $self->_normalize_output('latitude_symmetric',$lat2);
   return ( $lat2, $lon2 );
 }
 
@@ -622,7 +622,7 @@ sub to
   my($range,$bearing) = $self->_inverse(@args);
   print "to: inverse(@args) returns($range,$bearing)\n" if $DEBUG;
   #$bearing *= $degrees_per_radian if $units eq 'degrees';
-  $self->_normalize_output('bearing',$bearing);
+  $self->_normalize_output('bearing_symmetric',$bearing);
   if( wantarray() ) {
     return ( $range, $bearing );
   }else{
@@ -909,7 +909,7 @@ sub _normalize_input
 sub _normalize_output
 {
   my $self = shift;
-  my $elem = shift;     # 'bearing' or 'longitude'
+  my $elem = shift;     # '(bearing|latitude|longitude)_symmetric'
   # adjust remaining input values by reference
   for ( @_ ) {
     if( $self->{$elem} ) {
