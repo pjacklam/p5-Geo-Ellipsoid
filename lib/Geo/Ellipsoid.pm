@@ -102,8 +102,8 @@ our $twopi = 2 * pi;
 our $halfpi = pi/2;
 our %defaults = (
   ellipsoid => 'WGS84',
-  units => 'radians',
-  distance_units => 'meter',
+  angle_unit => 'radians',
+  distance_unit => 'meter',
   longitude_symmetric => 0,
   latitude_symmetric  => 1,     # allows use of _normalize_output
   bearing_symmetric   => 0,
@@ -162,8 +162,8 @@ The initial default constructor is equivalent to the following:
 
     my $geo = Geo::Ellipsoid->new(
       ellipsoid           => 'WGS84',
-      units               => 'radians' ,
-      distance_units      => 'meter',
+      angle_unit          => 'radians' ,
+      distance_unit       => 'meter',
       longitude_symmetric => 0,
       bearing_symmetric   => 0,
     );
@@ -183,10 +183,10 @@ sub new
   while (my ($key, $val) = each %args) {
     if( $key =~ /^ell/i ) {
       $self->{ellipsoid} = uc $val;
-    }elsif( $key =~ /^uni/i ) {
-      $self->{units} = $val;
+    }elsif( $key =~ /^(uni|angle_unit)/i ) {
+      $self->{angle_unit} = $val;
     }elsif( $key =~ /^dis/i ) {
-      $self->{distance_units} = $val;
+      $self->{distance_unit} = $val;
     }elsif( $key =~ /^lon/i ) {
       $self->{longitude_symmetric} = $val;
     }elsif( $key =~ /^bea/i ) {
@@ -197,13 +197,13 @@ sub new
   }
   bless $self, $class;
   $self->set_ellipsoid($self->{ellipsoid});
-  $self->set_units($self->{units});
-  $self->set_distance_unit($self->{distance_units});
+  $self->set_units($self->{angle_unit});
+  $self->set_distance_unit($self->{distance_unit});
   $self->set_longitude_symmetric($self->{longitude_symmetric});
   $self->set_bearing_symmetric($self->{bearing_symmetric});
   print
-    "Ellipsoid(units=>$self->{units},distance_units=>" .
-    "$self->{distance_units},ellipsoid=>$self->{ellipsoid}," .
+    "Ellipsoid(angle_unit=>$self->{angle_unit},distance_unit=>" .
+    "$self->{distance_unit},ellipsoid=>$self->{ellipsoid}," .
     "longitude_symmetric=>$self->{longitude_symmetric},bearing_symmetric=>$self->{bearing_symmetric})\n" if $DEBUG;
   return $self;
 }
@@ -216,33 +216,37 @@ sub new
 
 =over
 
+=item set_angle_unit
+
 =item set_units
 
-Set the angle units used by the Geo::Ellipsoid object. The units may
+Set the angle unit used by the Geo::Ellipsoid object. The unit may
 also be set in the constructor of the object. The allowable values are
-'degrees' or 'radians'. The default is 'radians'. The units value is
-not case sensitive and may be abbreviated to 3 letters. The units of
+'degrees' or 'radians'. The default is 'radians'. The unit value is
+not case sensitive and may be abbreviated to 3 letters. The unit of
 angle apply to both input and output latitude, longitude, and bearing
 values.
 
-    $geo->set_units('degrees');
+    $geo->set_angle_unit('degrees');
 
 =cut
 
-sub set_units
+sub set_angle_unit
 {
   my $self = shift;
-  my $units = shift;
-  if( $units =~ /deg/i ) {
-    $units = 'degrees';
-  }elsif( $units =~ /rad/i ) {
-    $units = 'radians';
+  my $unit = shift;
+  if( $unit =~ /deg/i ) {
+    $unit = 'degrees';
+  }elsif( $unit =~ /rad/i ) {
+    $unit = 'radians';
   }else{
-    croak("Invalid units specifier '$units' - please use either " .
-      "degrees or radians (the default)") unless $units =~ /rad/i;
+    croak("Invalid unit specifier '$unit' - please use either " .
+      "degrees or radians (the default)") unless $unit =~ /rad/i;
   }
-  $self->{units} = $units;
+  $self->{angle_unit} = $unit;
 }
+
+*set_units = \&set_angle_unit;
 
 =pod
 
@@ -288,7 +292,7 @@ sub set_distance_unit
       my $re = substr($key,0,3);
       print "trying ($key,$re,$val)\n" if $DEBUG;
       if( $unit =~ /^$re/i ) {
-        $self->{distance_units} = $unit;
+        $self->{distance_unit} = $unit;
         $conversion = $val;
 
         # finish iterating to reset 'each' function call
@@ -354,10 +358,10 @@ sub set_ellipsoid
 
 =item set_custom_ellipsoid
 
-Sets the ellipsoid parameters to the specified ( major semiaxis and
-reciprocal flattening. A zero value for the reciprocal flattening
-will result in a sphere for the ellipsoid, and a warning message
-will be issued.
+Sets the ellipsoid parameters to the specified semi-major axis (given in
+meters) and reciprocal flattening. A zero value for the reciprocal flattening
+will result in a sphere for the ellipsoid, and a warning message will be
+issued.
 
     $geo->set_custom_ellipsoid( 'sphere', 6378137, 0 );
 
@@ -437,9 +441,9 @@ Sets the defaults for the new method. Call with key, value pairs similar to
 new.
 
     $Geo::Ellipsoid->set_defaults(
-      units               => 'degrees',
       ellipsoid           => 'GRS80',
-      distance_units      => 'kilometer',
+      angle_unit          => 'degrees',
+      distance_unit       => 'kilometer',
       longitude_symmetric => 1,
       bearing_symmetric   => 0
     );
@@ -464,10 +468,10 @@ sub set_defaults
   while (my ($key, $val) = each %args) {
     if( $key =~ /^ell/i ) {
       $defaults{ellipsoid} = uc $val;
-    }elsif( $key =~ /^uni/i ) {
-      $defaults{units} = $val;
+    }elsif( $key =~ /^(uni|angle_unit)/i ) {
+      $defaults{angle_unit} = $val;
     }elsif( $key =~ /^dis/i ) {
-      $defaults{distance_units} = $val;
+      $defaults{distance_unit} = $val;
     }elsif( $key =~ /^lon/i ) {
       $defaults{longitude_symmetric} = $val;
     }elsif( $key =~ /^bea/i ) {
@@ -476,8 +480,125 @@ sub set_defaults
       croak("Geo::Ellipsoid::set_defaults called with invalid key: $key");
     }
   }
-  print "Defaults set to ($defaults{ellipsoid},$defaults{units}\n"
+  print "Defaults set to ($defaults{ellipsoid},$defaults{angle_unit}\n"
     if $DEBUG;
+}
+
+=pod
+
+=item get_ellipsoid
+
+Returns the name of the ellipsoid.
+
+=cut
+
+sub get_ellipsoid {
+    my $self = shift;
+    return $self -> {ellipsoid};
+}
+
+=pod
+
+=item get_equatorial_radius
+
+Returns the equatorial radius in meters.
+
+=cut
+
+sub get_equatorial_radius {
+    my $self = shift;
+    return $self -> {equatorial};
+}
+
+=pod
+
+=item get_polar_radius
+
+Returns the polar radius in meters.
+
+=cut
+
+sub get_polar_radius {
+    my $self = shift;
+    return $self -> {polar};
+}
+
+=pod
+
+=item get_flattening
+
+Returns the flattening.
+
+=cut
+
+sub get_flattening {
+    my $self = shift;
+    return $self -> {flattening};
+}
+
+=pod
+
+=item get_eccentricity
+
+Returns the eccentricity.
+
+=cut
+
+sub get_eccentricity {
+    my $self = shift;
+    return $self -> {eccentricity};
+}
+
+=pod
+
+=item get_longitude_symmetric
+
+Returns true if the longitude is symmetric around zero, and false otherwise.
+
+=cut
+
+sub get_longitude_symmetric {
+    my $self = shift;
+    return $self -> {longitude_symmetric};
+}
+
+=pod
+
+=item get_bearing_symmetric
+
+Returns true if the bearing is symmetric around zero, and false otherwise.
+
+=cut
+
+sub get_bearing_symmetric {
+    my $self = shift;
+    return $self -> {bearing_symmetric};
+}
+
+=pod
+
+=item get_angle_unit
+
+Returns the angle unit, i.e., the unit for latitude, longitude, and bearing.
+
+=cut
+
+sub get_angle_unit {
+    my $self = shift;
+    return $self -> {angle_unit};
+}
+
+=pod
+
+=item get_distance_unit
+
+Returns the distance unit.
+
+=cut
+
+sub get_distance_unit {
+    my $self = shift;
+    return $self -> {distance_unit};
 }
 
 =pod
@@ -498,7 +619,7 @@ calculations in the vicinity of some location.
 sub scales
 {
   my $self = shift;
-  my $units = $self->{units};
+  my $units = $self->{angle_unit};
   my $lat = $_[0];
   if( defined $lat ) {
     $lat /= $degrees_per_radian if( $units eq 'degrees' );
@@ -524,7 +645,7 @@ sub scales
     print "latscl=$latscl, lonscl=$lonscl\n";
   }
 
-  if( $self->{units} eq 'degrees' ) {
+  if( $self->{angle_unit} eq 'degrees' ) {
     $latscl /= $degrees_per_radian;
     $lonscl /= $degrees_per_radian;
   }
@@ -546,7 +667,7 @@ as latitude, longitude pairs.
 sub range
 {
   my $self = shift;
-  my @args = _normalize_input($self->{units},@_);
+  my @args = _normalize_input($self->{angle_unit},@_);
   my($range,$bearing) = $self->_inverse(@args);
   print "inverse(@_[1..4]) returns($range,$bearing)\n" if $DEBUG;
   return $range;
@@ -566,7 +687,7 @@ the second. Zero bearing is true north.
 sub bearing
 {
   my $self = shift;
-  my $units = $self->{units};
+  my $units = $self->{angle_unit};
   my @args = _normalize_input($units,@_);
   my($range,$bearing) = $self->_inverse(@args);
   print "inverse(@args) returns($range,$bearing)\n" if $DEBUG;
@@ -590,7 +711,7 @@ specified range and bearing from a given location.
 sub at
 {
   my $self = shift;
-  my $units = $self->{units};
+  my $units = $self->{angle_unit};
   my( $lat, $lon, $az ) = _normalize_input($units,@_[0,1,3]);
   my $r = $_[2];
   print "at($lat,$lon,$r,$az)\n" if $DEBUG;
@@ -616,7 +737,7 @@ In scalar context, returns just the range.
 sub to
 {
   my $self = shift;
-  my $units = $self->{units};
+  my $units = $self->{angle_unit};
   my @args = _normalize_input($units,@_);
   print "to($units,@args)\n" if $DEBUG;
   my($range,$bearing) = $self->_inverse(@args);
@@ -649,7 +770,7 @@ sub displacement
 {
   my $self = shift;
   print "displacement(",join(',',@_),"\n" if $DEBUG;
-  my @args = _normalize_input($self->{units},@_);
+  my @args = _normalize_input($self->{angle_unit},@_);
   print "call _inverse(@args)\n" if $DEBUG;
   my( $range, $bearing ) = $self->_inverse(@args);
   print "disp: _inverse(@args) returns ($range,$bearing)\n" if $DEBUG;
@@ -672,7 +793,7 @@ displacement from a given location.
 sub location
 {
   my $self = shift;
-  my $units = $self->{units};
+  my $units = $self->{angle_unit};
   my($lat,$lon,$x,$y) = @_;
   my $range = sqrt( $x*$x+ $y*$y );
   my $bearing = atan2($x,$y);
@@ -885,10 +1006,9 @@ sub _forward
 
 #       _normalize_input
 #
-#       Normalize a set of input angle values by converting to
-#       radians if given in degrees and by converting to the
-#       range [0,2pi), i.e. greater than or equal to zero and
-#       less than two pi.
+#       Normalize a set of input angle values by converting to radians if given
+#       in degrees. We don't add/subtract multiples of two pi, because the
+#       trigonometric functions do this more accuractely.
 #
 sub _normalize_input
 {
@@ -921,7 +1041,7 @@ sub _normalize_output
       while( $_ < 0 ) { $_ += $twopi }
       while( $_ >= $twopi ) { $_ -= $twopi }
     }
-    $_ = rad2deg($_) if $self->{units} eq 'degrees';
+    $_ = rad2deg($_) if $self->{angle_unit} eq 'degrees';
   }
 }
 

@@ -1,5 +1,19 @@
 1.15 Not Released
 
+ - Rename the too generically property "units" to "angle_unit", and
+   "distance_units" to "distance_unit".
+
+ - Provide set_angle_unit() as an alternative to the too generically
+   named method set_units(). The name set_angle_unit() corresponds
+   nicely to the existing method set_distance_unit().
+
+ - Add accessors get_angle_unit(), get_distance_unit(), get_ellipsoid(),
+   get_equatorial_radius(), get_polar_radius(), get_flattening(), and
+   get_eccentricity(), get_longitude_symmetric(), and
+   get_bearing_symmetric(). These are necessary for subclassing.
+
+ - Rename some old test files and add new test files.
+
  - Don't hardcode the value of pi.
 
  - Use more of the functionality in Test::More. This gives us more informative
