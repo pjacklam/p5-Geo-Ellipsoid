@@ -910,15 +910,6 @@ sub _inverse()
 
   printf "s=%.8f\n", $s if $DEBUG;
 
-  # adjust azimuth to (0,360) or (-180,180) as specified
-  if( $self->{symmetric} ) {
-    $faz += $twopi if $faz < -(pi);
-    $faz -= $twopi if $faz >= pi;
-  }else{
-    $faz += $twopi if $faz < 0;
-    $faz -= $twopi if $faz >= $twopi;
-  }
-
   # return result
   my @disp = ( ($s/$self->{conversion}), $faz );
   print "disp = (@disp)\n" if $DEBUG;
