@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Fix typos in POD.
+
  - Remove code that is never executed.
 
  - Rename the too generically property "units" to "angle_unit", and

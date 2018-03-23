@@ -440,7 +440,7 @@ sub set_bearing_symmetric
 Sets the defaults for the new method. Call with key, value pairs similar to
 new.
 
-    $Geo::Ellipsoid->set_defaults(
+    Geo::Ellipsoid->set_defaults(
       ellipsoid           => 'GRS80',
       angle_unit          => 'degrees',
       distance_unit       => 'kilometer',
@@ -451,7 +451,7 @@ new.
 Keys and string values (except for the ellipsoid identifier) may be shortened
 to their first three letters and are case-insensitive:
 
-    $Geo::Ellipsoid->set_defaults(
+    Geo::Ellipsoid->set_defaults(
       uni => 'deg',
       ell => 'GRS80',
       dis => 'kil',
