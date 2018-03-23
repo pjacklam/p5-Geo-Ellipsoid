@@ -133,7 +133,9 @@ our %ellipsoids = (
 
 =head1 CONSTRUCTOR
 
-=head2 new
+=over
+
+=item new
 
 The new() constructor may be called with a hash list to set the value of the
 ellipsoid to be used, the value of the units to be used for angles and
@@ -191,9 +193,13 @@ sub new
 
 =pod
 
+=back
+
 =head1 METHODS
 
-=head2 set_units
+=over
+
+=item set_units
 
 Set the angle units used by the Geo::Ellipsoid object. The units may
 also be set in the constructor of the object. The allowable values are
@@ -223,7 +229,7 @@ sub set_units
 
 =pod
 
-=head2 set_distance_unit
+=item set_distance_unit
 
 Set the distance unit used by the Geo::Ellipsoid object. The unit of
 distance may also be set in the constructor of the object. The recognized
@@ -292,7 +298,7 @@ sub set_distance_unit
 
 =pod
 
-=head2 set_ellipsoid
+=item set_ellipsoid
 
 Set the ellipsoid to be used by the Geo::Ellipsoid object. See
 L<"DEFINED ELLIPSOIDS"> below for the allowable values. The value
@@ -329,7 +335,7 @@ sub set_ellipsoid
 
 =pod
 
-=head2 set_custom_ellipsoid
+=item set_custom_ellipsoid
 
 Sets the ellipsoid parameters to the specified ( major semiaxis and
 reciprocal flattening. A zero value for the reciprocal flattening
@@ -356,7 +362,7 @@ sub set_custom_ellipsoid
 
 =pod
 
-=head2 set_longitude_symmetric
+=item set_longitude_symmetric
 
 If called with no argument or a true argument, sets the range of output
 values for longitude to be in the range [-pi,+pi) radians.  If called with
@@ -382,7 +388,7 @@ sub set_longitude_symmetric
 
 =pod
 
-=head2 set_bearing_symmetric
+=item set_bearing_symmetric
 
 If called with no argument or a true argument, sets the range of output
 values for bearing to be in the range [-pi,+pi) radians.  If called with
@@ -408,7 +414,7 @@ sub set_bearing_symmetric
 
 =pod
 
-=head2 set_defaults
+=item set_defaults
 
 Sets the defaults for the new method. Call with key, value pairs similar to
 new.
@@ -459,7 +465,7 @@ sub set_defaults
 
 =pod
 
-=head2 scales
+=item scales
 
 Returns a list consisting of the distance unit per angle of latitude
 and longitude (degrees or radians) at the specified latitude.
@@ -510,7 +516,7 @@ sub scales
 
 =pod
 
-=head2 range
+=item range
 
 Returns the range in distance units between two specified locations given
 as latitude, longitude pairs.
@@ -531,7 +537,7 @@ sub range
 
 =pod
 
-=head2 bearing
+=item bearing
 
 Returns the bearing in degrees or radians from the first location to
 the second. Zero bearing is true north.
@@ -555,7 +561,7 @@ sub bearing
 
 =pod
 
-=head2 at
+=item at
 
 Returns the list (latitude,longitude) in degrees or radians that is a
 specified range and bearing from a given location.
@@ -580,7 +586,7 @@ sub at
 
 =pod
 
-=head2 to
+=item to
 
 In list context, returns (range, bearing) between two specified locations.
 In scalar context, returns just the range.
@@ -609,7 +615,7 @@ sub to
 
 =pod
 
-=head2 displacement
+=item displacement
 
 Returns the (x,y) displacement in distance units between the two specified
 locations.
@@ -637,7 +643,7 @@ sub displacement
 
 =pod
 
-=head2 location
+=item location
 
 Returns the list (latitude,longitude) of a location at a given (x,y)
 displacement from a given location.
@@ -905,6 +911,8 @@ sub _normalize_output
 }
 
 =pod
+
+=back
 
 =head1 DEFINED ELLIPSOIDS
 

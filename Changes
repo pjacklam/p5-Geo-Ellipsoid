@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - In POD, use =item for methods, as this is more common than =head2.
+
  - Correct the version numbering in Changes (this file) and add missing entry
    for version 1.11. Format CHANGES according to CPAN::Changes::Spec. Add test
    file t/release-cpan-changes.t.
