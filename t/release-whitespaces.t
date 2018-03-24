@@ -11,5 +11,5 @@ use strict;
 use warnings;
 
 use Test::Whitespaces {
-    dirs => [ 'lib', 't', 'examples' ],
+    dirs => [ 'gentest', 'lib', 't', 'test' ],
 };

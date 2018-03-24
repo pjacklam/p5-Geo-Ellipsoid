@@ -1,9 +1,9 @@
 #!/usr/local/bin/perl
 #
-#	gentest_ellipsoid.pl
+#       gentest_ellipsoid.pl
 #
-#	Test Ellipsoid.pm module coordinate transformations and
-#	generate test programs.
+#       Test Ellipsoid.pm module coordinate transformations and
+#       generate test programs.
 
 use strict;
 use warnings;
@@ -36,10 +36,10 @@ my $kilo  = 1000.0;
 # global variables
 my $e = Geo::Ellipsoid->new( units => 'degrees' );
 my $e_pos = Geo::Ellipsoid->new( units => 'degrees' );
-my $e_sym = Geo::Ellipsoid->new( 
-  units => 'degrees', 
-  bearing => 1, 
-  longitude => 1 
+my $e_sym = Geo::Ellipsoid->new(
+  units => 'degrees',
+  bearing => 1,
+  longitude => 1
 );
 
 my $outdir = '.';
@@ -59,14 +59,14 @@ die("Invalid options: @ARGV") unless GetOptions(
   'o' => \$write,
 );
 
-srand(0);	# set random seed for repeatability
+srand(0);       # set random seed for repeatability
 
 # create directory to hold generated files
 unless( -d $outdir ) {
   mkdir $outdir or die("Can't create directory $outdir: $!");
 }
 
-my @files = qw( 
+my @files = qw(
   load create defaults set scale to at location range bearing displacement
 );
 my %tests;
@@ -106,26 +106,26 @@ isa_ok( \$e4, 'Geo::Ellipsoid');
 EOS
   push(@{$tests{load}{code}},$code);
   $tests{load}{count} = 6;
-  
-  for my $s ( 
-    qw{ 
-      new 
-      set_units 
-      set_distance_unit 
-      set_ellipsoid 
-      set_custom_ellipsoid 
-      set_longitude_symmetric 
-      set_bearing_symmetric 
+
+  for my $s (
+    qw{
+      new
+      set_units
+      set_distance_unit
+      set_ellipsoid
+      set_custom_ellipsoid
+      set_longitude_symmetric
+      set_bearing_symmetric
       set_defaults
-      scales 
-      range 
-      bearing 
-      at 
-      to 
-      displacement 
+      scales
+      range
+      bearing
+      at
+      to
+      displacement
       location
-    } 
-  
+    }
+
 ) {
     my $t = "can_ok( 'Geo::Ellipsoid', '$s' );";
     push(@{$tests{load}{code}},$t);
@@ -137,9 +137,9 @@ sub test_object_creation
 {
   print "Generate object creation tests\n" if $debug;
   $counter = 1;
-  #	create
+  #     create
   #
-  #	Generate tests for object creation
+  #     Generate tests for object creation
   #
   # retrieve list of ellipsoids
   print "Ellipsoids:\n" if $print;
@@ -149,7 +149,7 @@ sub test_object_creation
     printf "  %20s  %12.3f  %s\n", $ell, $a, $rf if $print;
     write_create_test($ell) if $write;
   }
-  
+
   # test custom ellipsoid
   my $custom = Geo::Ellipsoid->new();
   my $name = 'CUSTOM';
@@ -157,14 +157,14 @@ sub test_object_creation
   my $recip = 300;
   my $var = '$e'.$counter++;
   $custom->set_custom_ellipsoid($name,$major,$recip);
-  
+
   my $code = "my $var = Geo::Ellipsoid->new();\n" .
   "${var}->set_custom_ellipsoid('$name',$major,$recip);";
   push( @{${tests{create}}{code}}, $code);
   write_create_test_code($name,$var,$custom);
 
   # warn user about upcoming warning message
-  push( @{${tests{create}}{code}}, 
+  push( @{${tests{create}}{code}},
     qq(print STDERR "\\n#\\n#\\tWarning about 'Infinite flattening' OK here\\n#\\n;";)
   );
 
@@ -191,9 +191,9 @@ ok( $e1->{distance_units} eq 'meter' );
 ok( $e1->{longitude} == 0 );
 ok( $e1->{latitude} == 1 );
 ok( $e1->{bearing} == 0 );
-$e1->set_defaults( 
+$e1->set_defaults(
   ellipsoid => 'NAD27',
-  units => 'degrees', 
+  units => 'degrees',
   distance_units => 'kilometer',
   longitude => 1,
   bearing => 1
@@ -210,9 +210,9 @@ EOS
   ${$tests{defaults}}{count} = 12;
 
   $counter = 3;
-  #	defaults
+  #     defaults
   #
-  #	Generate tests for setting default values
+  #     Generate tests for setting default values
   #
   # retrieve list of ellipsoids
   foreach my $ell ( @ellipsoids ) {
@@ -247,7 +247,7 @@ EOS
   push( @{${tests{defaults}}{code}}, $code );
   ${$tests{defaults}}{count} += 9;
 }
- 
+
 sub test_inverse
 {
   print "Generate inverse tests\n" if $debug;
@@ -291,7 +291,7 @@ EOS
 
           # skip tests where points are anti-podal
           next if $lat2 == -$lat1 and abs($lon1-$lon2) == 180;
-          
+
           my( $r, $az ) = $e->to($lat1,$lon1,$lat2,$lon2);
           print "$n: ($lat1,$lon1)->($lat2,$lon2): ($r,$az)\n" if $debug;
           $n++;
@@ -303,7 +303,7 @@ EOS
       }
     }
   }
-  
+
   # test random values
   for ( 1..100 ) {
     my $lat1 = -88 + rand 176;
@@ -312,8 +312,8 @@ EOS
     my $lon2 = rand 360;
 
     # skip tests where points are anti-podal
-    next if (abs($lat2 + $lat1) < 1) and 
-    	    (abs($lon1 - $lon2 - 180) < 1);
+    next if (abs($lat2 + $lat1) < 1) and
+            (abs($lon1 - $lon2 - 180) < 1);
 
     my ( $r, $az ) = $e->to($lat1,$lon1,$lat2,$lon2);
     print "$n: ($lat1,$lon1)->($lat2,$lon2)\n" if $debug;
@@ -329,12 +329,12 @@ sub test_to
   print "Generate to tests\n" if $debug;
   my( $range, $bearing, $lat1, $lon1, $lat2, $lon2 ) = @_;
   my $n = 1;
-  my $l1 = sprintf "%.6f, %.6f", $lat1, $lon1; 
+  my $l1 = sprintf "%.6f, %.6f", $lat1, $lon1;
   my $l2 = sprintf "%.6f, %.6f", $lat2, $lon2;
-  
+
   my $t = sprintf "(\$r,\$a) = \$e->to( %.6f, %.6f, %.6f, %.6f );",
     $lat1, $lon1, $lat2, $lon2;
-    
+
   my $code = "( \$r, \$a ) = \$e->to($l1,$l2);\n";
   if( $range < 100.0 ) {
     $code .= "delta_within( \$r, $range, 0.1 );\n";
@@ -383,7 +383,7 @@ sub test_bearing
   printf "test_bearing([%.2f,%.2f]->[%.2f,%.2f])\n",
     $lat1, $lon1, $lat2, $lon2 if $debug;
 
-  my $l1 = sprintf "%.6f,%.6f", $lat1, $lon1; 
+  my $l1 = sprintf "%.6f,%.6f", $lat1, $lon1;
   my $l2 = sprintf "%.6f,%.6f", $lat2, $lon2;
   return if $l1 eq $l2;
 
@@ -440,10 +440,10 @@ EOS
     my $range = rand 10000;
     my $bearing = rand 360;
     my $az = deg2rad($bearing);
-    
+
     my $x = $range * sin($az);
     my $y = $range * cos($az);
-    
+
     my ( $lat2, $lon2 ) = $e->at($lat1,$lon1,$range,$bearing);
     print "$n: ($lat1,$lon1,\n  $range,$bearing,\n  $x,$y)->\n  ($lat2,$lon2)\n"
       if $debug;
@@ -529,7 +529,7 @@ EOS
   test_set_units($n++,'RAD','radians');
   test_set_units($n++,'Rad','radians');
   test_set_units($n++,'rad','radians');
-  
+
   for my $ell ( sort @ellipsoids ) {
     test_set_ellipsoid($n++,$ell) unless $ell =~ /custom/i;
   }
@@ -547,17 +547,17 @@ my \$e$n = Geo::Ellipsoid->new();
 \$e${n}->set_ellipsoid('$ell');
 ok( \$e->{ellipsoid} eq '$ell' );
 ok( \$e${n}->{ellipsoid} eq '$ell' );
-delta_ok( \$e${n}->{equatorial}, $e->{equatorial} ); 
-delta_ok( \$e${n}->{polar}, $e->{polar} ); 
-delta_ok( \$e${n}->{flattening}, $e->{flattening} ); 
-delta_ok( \$e->{equatorial}, $e->{equatorial} ); 
-delta_ok( \$e->{polar}, $e->{polar} ); 
-delta_ok( \$e->{flattening}, $e->{flattening} ); 
+delta_ok( \$e${n}->{equatorial}, $e->{equatorial} );
+delta_ok( \$e${n}->{polar}, $e->{polar} );
+delta_ok( \$e${n}->{flattening}, $e->{flattening} );
+delta_ok( \$e->{equatorial}, $e->{equatorial} );
+delta_ok( \$e->{polar}, $e->{polar} );
+delta_ok( \$e->{flattening}, $e->{flattening} );
 EOS
   push(@{$tests{set}{code}}, $code);
   ${$tests{set}}{count} += 8;
 }
-  
+
 sub test_set_units
 {
   print "Generate set units tests\n" if $debug;
@@ -574,7 +574,7 @@ EOS
   push(@{$tests{set}{code}}, $code);
   ${$tests{set}}{count} += 2;
 }
-  
+
 sub write_create_test
 {
   my( $ell ) = @_;
@@ -635,8 +635,8 @@ sub test_scale_factors
   print "Generate scale factor tests\n" if $debug;
   # test scale factors
   if( $print ) {
-    print 
-    "\nPrint Latitude and Longitude scale factors (meters per degree):\n\n"; 
+    print
+    "\nPrint Latitude and Longitude scale factors (meters per degree):\n\n";
     print "+----------------------------------------+\n";
     print "| Latitude |    F(Lat)    |    F(Lon)    |\n";
     print "|----------|--------------|--------------|\n";
@@ -677,7 +677,7 @@ sub write_test_code
   print "Writing test program $file with $n tests...\n";
   open( my $fh, '>', "$file.t" ) or die("Can't create $file.t: $!");
   write_prolog($fh,$t,$n);
-  print $fh join("\n", @{${$tests{$t}}{code}}), "\n";  
+  print $fh join("\n", @{${$tests{$t}}{code}}), "\n";
   close($fh);
 }
 
@@ -699,9 +699,9 @@ EOS
 }
 
 my $earth = Geo::Ellipsoid->new(
-  units => 'degrees', 
-  ellipsoid => 'WGS84', 
-  debug => $debug 
+  units => 'degrees',
+  ellipsoid => 'WGS84',
+  debug => $debug
 );
 
 printf "    Equatorial radius = %.10f\n", $earth->{equatorial};
@@ -758,7 +758,7 @@ sub print_vector
   print "(${lat1deg}d ${lat1min}m ${lat1sec})-(" .
     "${lon1deg}d ${lon1min}m ${lon1sec}) ";
   printf "[%.8f,%.8f] to\n", $lat1, $lon1;
-  print 
+  print
   "(${lat2deg}d ${lat2min}m ${lat2sec})-(${lon2deg}d ${lon2min}m ${lon2sec}) ";
   printf "[%.8f,%.8f]\n", $lat2, $lon2;
 
@@ -767,14 +767,14 @@ sub print_vector
 
 sub print_dist
 {
-  my( $lat1, $lon1, $lat2, $lon2 ) = @_;	# in radians
+  my( $lat1, $lon1, $lat2, $lon2 ) = @_;        # in radians
   my $ellipsoid = Geo::Ellipsoid->new(uni=>'radians',ell=>'WGS84',deb=>$debug);
   my $ellipsoid2 = Geo::Ellipsoid->new(uni=>'degrees',ell=>'WGS84',deb=>$debug);
   my( $dlat1, $dlon1, $dlat2, $dlon2 ) = map { $_ * $degrees_per_radian } @_;
 
   printf "\nHere  = [%.12f,%.12f]\n", $dlat1, $dlon1;
   printf "There = [%.12f,%.12f]\n", $dlat2, $dlon2;
-  
+
   my @d = $ellipsoid->displacement( $lat1, $lon1, $lat2, $lon2 );
   my @e = $ellipsoid2->displacement( $dlat1, $dlon1, $dlat2, $dlon2 );
   my( $range, $bearing ) = $ellipsoid->to( $lat1, $lon1, $lat2, $lon2 );
@@ -791,8 +791,8 @@ sub print_dist
 
 sub print_target
 {
-  my( $lat1deg, $lat1min, $lat1sec, 
-      $lon1deg, $lon1min, $lon1sec, 
+  my( $lat1deg, $lat1min, $lat1sec,
+      $lon1deg, $lon1min, $lon1sec,
       $range, $degrees ) = @_;
 
   my $lat1 = Angle($lat1deg,$lat1min,$lat1sec);
@@ -819,17 +819,17 @@ sub print_target
     @there;
 }
 
-#	Angle
+#       Angle
 #
-#	Return angle in radians given the list 
-#	( degree, minute, second, hundreths-of-second)
+#       Return angle in radians given the list
+#       ( degree, minute, second, hundreths-of-second)
 #
 sub Angle
 {
   my $deg = shift || 0;
   my $min = shift || 0;
   my $sec = shift || 0;
-  my $csec = shift || 0;	# optional 100th's of a second
+  my $csec = shift || 0;        # optional 100th's of a second
 
   #print "convert (@_) to angle in radians\n" if $debug;
   my $frac = ( $min + (($sec + ($csec/100))/60))/60;
@@ -851,4 +851,3 @@ sub polar
   my $bearing = $halfpi - atan2($y,$x);
   return ($range, $bearing);
 }
- 

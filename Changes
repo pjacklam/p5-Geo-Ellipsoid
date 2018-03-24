@@ -1,5 +1,8 @@
 1.15 Not Released
 
+ - Clean up whitespace and fix bug in t/release-whitespaces.t. The list of
+   directories in the test file was incorrect.
+
  - Add test file t/release-kwalitee.t.
 
  - Accept three-letter abbreviation of angle unit.
