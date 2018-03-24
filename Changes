@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Add test file t/release-kwalitee.t.
+
  - Accept three-letter abbreviation of angle unit.
 
  - Improve documentation in the POD.
