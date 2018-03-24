@@ -183,7 +183,7 @@ sub new
   while (my ($key, $val) = each %args) {
     if( $key =~ /^ell/i ) {
       $self->{ellipsoid} = uc $val;
-    }elsif( $key =~ /^(uni|angle_unit)/i ) {
+    }elsif( $key =~ /^(uni|ang)/i ) {
       $self->{angle_unit} = $val;
     }elsif( $key =~ /^dis/i ) {
       $self->{distance_unit} = $val;
@@ -473,7 +473,7 @@ sub set_defaults
   while (my ($key, $val) = each %args) {
     if( $key =~ /^ell/i ) {
       $defaults{ellipsoid} = uc $val;
-    }elsif( $key =~ /^(uni|angle_unit)/i ) {
+    }elsif( $key =~ /^(uni|ang)/i ) {
       $defaults{angle_unit} = $val;
     }elsif( $key =~ /^dis/i ) {
       $defaults{distance_unit} = $val;
