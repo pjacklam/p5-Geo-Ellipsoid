@@ -630,8 +630,6 @@ sub scales
 
   my $aa = $self->{equatorial};
   my $bb = $self->{polar};
-  my $a2 = $aa*$aa;
-  my $b2 = $bb*$bb;
   my $d1 = $aa * cos($lat);
   my $d2 = $bb * sin($lat);
   my $d3 = $d1*$d1 + $d2*$d2;
