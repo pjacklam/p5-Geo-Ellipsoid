@@ -40,8 +40,8 @@ our $DEBUG = 0;
 
   use Geo::Ellipsoid;
 
-  $geo = Geo::Ellipsoid->new(ellipsoid=>'NAD27',
-                             units=>'degrees');
+  $geo = Geo::Ellipsoid->new(ellipsoid  => 'NAD27',
+                             angle_unit => 'degrees');
 
   @origin = ( 37.619002, -122.374843 );    # SFO
   @dest = ( 33.942536, -118.408074 );      # LAX
@@ -54,7 +54,7 @@ our $DEBUG = 0;
 
   # destination given start point, range, and bearing
 
-  ($lat,$lon) = $geo->at( @origin, 2000, 45.0 );
+  ( $lat, $lon ) = $geo->at( @origin, 2000, 45.0 );
 
   # approximate displacement given one location and a destination
 
@@ -62,7 +62,7 @@ our $DEBUG = 0;
 
   # approximate location given one location and displacement
 
-  @pos = $geo->location( $lat, $lon, $x, $y );
+  my @pos = $geo->location( $lat, $lon, $x, $y );
 
 =head1 DESCRIPTION
 
@@ -252,17 +252,16 @@ sub set_angle_unit
 
 =item set_distance_unit
 
-Set the distance unit used by the Geo::Ellipsoid object. The unit of
-distance may also be set in the constructor of the object. The recognized
-values are 'meter', 'kilometer', 'mile', 'nm' (nautical mile), or 'foot'.
-The default is 'meter'. The value is not case sensitive and may be
-abbreviated to 3 letters.
+Set the distance unit used by the Geo::Ellipsoid object. The unit of distance
+may also be set in the constructor of the object. The recognized values are
+'meter', 'kilometer', 'mile', 'nm' (nautical mile), or 'foot'. The default is
+'meter'. The value is not case sensitive and may be abbreviated to 3 letters.
 
     $geo->set_distance_unit('kilometer');
 
-For any other unit of distance not recogized by this method, pass a
-numerical argument representing the length of the distance unit in
-meters. For example, to use units of furlongs, call
+For any other unit of distance not recogized by this method, pass a numerical
+argument representing the length of the distance unit in meters. For example,
+to use units of furlongs, call
 
     $geo->set_distance_unit(201.168);
 
@@ -385,10 +384,13 @@ sub set_custom_ellipsoid
 
 =item set_longitude_symmetric
 
-If called with no argument or a true argument, sets the range of output
-values for longitude to be in the range [-pi,+pi) radians.  If called with
-a false or undefined argument, sets the output angle range to be
-[0,2*pi) radians.
+If called with no argument or a true argument, sets the range of output values
+for longitude to be symmetric around zero, i.e., in the range [-pi,+pi)
+radians, [-180,180) degrees etc. depending on the angle unit.
+
+If called with a false or undefined argument, sets the output angle range to be
+non-negative, i.e., [0,2*pi) radians, [0, 360) degrees etc. depending on the
+angle unit.
 
     $geo->set_longitude_symmetric(1);
 
@@ -411,10 +413,13 @@ sub set_longitude_symmetric
 
 =item set_bearing_symmetric
 
-If called with no argument or a true argument, sets the range of output
-values for bearing to be in the range [-pi,+pi) radians.  If called with
-a false or undefined argument, sets the output angle range to be
-[0,2*pi) radians.
+If called with no argument or a true argument, sets the range of output values
+for bearing to be symmetric around zero, i.e., in the range [-pi,+pi) radians,
+[-180,180) degrees etc. depending on the angle unit.
+
+If called with a false or undefined argument, sets the output angle range to be
+non-negative, i.e., [0,2*pi) radians, [0,360) degrees etc. depending on the
+angle unit.
 
     $geo->set_bearing_symmetric(1);
 
@@ -437,8 +442,8 @@ sub set_bearing_symmetric
 
 =item set_defaults
 
-Sets the defaults for the new method. Call with key, value pairs similar to
-new.
+Sets the defaults for the new() constructor method. Call with key, value pairs
+similar to new.
 
     Geo::Ellipsoid->set_defaults(
       ellipsoid           => 'GRS80',

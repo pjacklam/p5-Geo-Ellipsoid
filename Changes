@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Improve documentation in the POD.
+
  - Add test file t/release-unused-vars.t and remove unused variables.
 
  - Add test file t/release-pod-coverage.t.
