@@ -11,5 +11,10 @@ use strict;
 use warnings;
 
 use Test::Whitespaces {
-    dirs => [ 'gentest', 'lib', 't', 'test' ],
+    dirs => [ '.' ],
+    ignore => [ qr|/blib/|,
+                qr|/Makefile$|,
+                qr|/Makefile\.old$|,
+                qr|/pm_to_blib$|,
+              ],
 };
