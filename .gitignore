@@ -20,3 +20,7 @@ pod2htm*
 # Perl distro Specific.
 
 /Geo-Ellipsoid-[0-9]*
+
+# Skip my shell script utilities.
+
+/*.sh

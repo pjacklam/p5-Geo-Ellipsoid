@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Skip my shell script utilities.
+
  - Clean up whitespace and fix bug in t/release-whitespaces.t. The list of
    directories in the test file was incorrect.
 
