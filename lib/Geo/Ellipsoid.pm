@@ -212,7 +212,27 @@ sub new
 
 =back
 
-=head1 METHODS
+=head1 CLASS METHODS
+
+=over
+
+=item get_ellipsoids
+
+Returns a list with the names all known ellipsoids.
+
+=back
+
+=cut
+
+sub get_ellipsoids {
+    sort keys %ellipsoids;
+}
+
+=pod
+
+=head1 INSTANCE METHODS
+
+=head2 Setters
 
 =over
 
@@ -491,6 +511,12 @@ sub set_defaults
 
 =pod
 
+=back
+
+=head2 Getters
+
+=over
+
 =item get_ellipsoid
 
 Returns the name of the ellipsoid.
@@ -526,6 +552,35 @@ Returns the polar radius in meters.
 sub get_polar_radius {
     my $self = shift;
     return $self -> {polar};
+}
+
+=pod
+
+=item get_geocentric_radius ANGLE
+
+Returns the geocentric radius in meters, given a geocentric latitude. The
+geocentric latitude is the angle between the equatorial plane and the radius
+from centre to the point on the surface.
+
+=cut
+
+sub get_geocentric_radius {
+    my $self = shift;
+    my $angle = shift;
+    my $angle_unit = $self->{angle_unit};
+    $angle /= $degrees_per_radian if $angle_unit eq 'degrees';
+
+    my $a = $self -> {equatorial};
+    my $b = $self -> {polar};
+    my $a2 = $a * $a;
+    my $b2 = $b * $b;
+
+    my $sa = sin $angle;
+    my $ca = cos $angle;
+    my $sa2 = $sa * $sa;
+    my $ca2 = $ca * $ca;
+
+    return $a * $b / sqrt($a2 * $sa2 + $b2 * $ca2);
 }
 
 =pod
