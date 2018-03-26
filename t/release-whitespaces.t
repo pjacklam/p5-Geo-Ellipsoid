@@ -11,10 +11,10 @@ use strict;
 use warnings;
 
 use Test::Whitespaces {
-    dirs => [ '.' ],
+    dirs   => [ '.' ],
     ignore => [ qr|/blib/|,
-                qr|/Makefile$|,
-                qr|/Makefile\.old$|,
+                qr|/Makefile(\.old)?$|,
+                qr|/MANIFEST(\.bak)?$|,
                 qr|/pm_to_blib$|,
               ],
 };

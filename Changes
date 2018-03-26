@@ -1,5 +1,7 @@
 1.15 Not Released
 
+ - Improve the test file t/release-whitespaces.t.
+
  - Skip my shell script utilities.
 
  - Clean up whitespace and fix bug in t/release-whitespaces.t. The list of
