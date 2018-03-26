@@ -46,7 +46,7 @@ my $outdir = '.';
 #my $outdir = 'Ellipsoid';
 
 # make copy of original set of pre-defined ellipsoids
-my @ellipsoids = keys %Geo::Ellipsoid::ellipsoids;
+my @ellipsoids = sort keys %Geo::Ellipsoid::ellipsoids;
 
 print "Enter test_ellipsoid\n\n";
 
@@ -97,7 +97,7 @@ my \$e = Geo::Ellipsoid->new();
 isa_ok( \$e, 'Geo::Ellipsoid');
 my \$e1 = Geo::Ellipsoid->new( units => 'degrees' );
 isa_ok( \$e1, 'Geo::Ellipsoid');
-my \$e2 = Geo::Ellipsoid->new( distance_units => 'foot' );
+my \$e2 = Geo::Ellipsoid->new( distance_unit => 'foot' );
 isa_ok( \$e2, 'Geo::Ellipsoid');
 my \$e3 = Geo::Ellipsoid->new( bearing => 1 );
 isa_ok( \$e3, 'Geo::Ellipsoid');
@@ -165,7 +165,7 @@ sub test_object_creation
 
   # warn user about upcoming warning message
   push( @{${tests{create}}{code}},
-    qq(print STDERR "\\n#\\n#\\tWarning about 'Infinite flattening' OK here\\n#\\n;";)
+    q(diag "\n\n\tWarning about 'Infinite flattening' OK here\n\n";)
   );
 
   my $sphere = Geo::Ellipsoid->new;
@@ -185,26 +185,26 @@ sub test_defaults
 
   my $code = <<'EOS';
 my $e1 = Geo::Ellipsoid->new();
-ok( $e1->{ellipsoid} eq 'WGS84' );
-ok( $e1->{units} eq 'radians' );
-ok( $e1->{distance_units} eq 'meter' );
-ok( $e1->{longitude} == 0 );
-ok( $e1->{latitude} == 1 );
-ok( $e1->{bearing} == 0 );
+is( $e1->{ellipsoid}, 'WGS84' );
+is( $e1->{angle_unit}, 'radians' );
+is( $e1->{distance_unit}, 'meter' );
+cmp_ok( $e1->{longitude_symmetric}, '==', 0 );
+cmp_ok( $e1->{latitude_symmetric}, '==', 1 );
+cmp_ok( $e1->{bearing_symmetric}, '==', 0 );
 $e1->set_defaults(
   ellipsoid => 'NAD27',
   units => 'degrees',
-  distance_units => 'kilometer',
+  distance_unit => 'kilometer',
   longitude => 1,
   bearing => 1
 );
 my $e2 = Geo::Ellipsoid->new();
-ok( $e2->{ellipsoid} eq 'NAD27' );
-ok( $e2->{units} eq 'degrees' );
-ok( $e2->{distance_units} eq 'kilometer' );
-ok( $e2->{longitude} == 1 );
-ok( $e2->{latitude} == 1 );
-ok( $e2->{bearing} == 1 );
+is( $e2->{ellipsoid}, 'NAD27' );
+is( $e2->{angle_unit}, 'degrees' );
+is( $e2->{distance_unit}, 'kilometer' );
+cmp_ok( $e2->{longitude_symmetric}, '==', 1 );
+cmp_ok( $e2->{latitude_symmetric}, '==', 1 );
+cmp_ok( $e2->{bearing_symmetric}, '==', 1 );
 EOS
   push( @{${tests{defaults}}{code}}, $code);
   ${$tests{defaults}}{count} = 12;
@@ -232,14 +232,14 @@ sub write_defaults_test
   print "  e=$ell, var=$var, a=$a, b=$b, f=$f\n" if $debug;
 
   my $code = <<EOS;
-Geo::Ellipsoid->set_defaults(units=>'degrees',ell=>'$ell');
-ok( \$Geo::Ellipsoid::defaults{ellipsoid} eq '$ell' );
-ok( \$Geo::Ellipsoid::defaults{units} eq 'degrees' );
+Geo::Ellipsoid->set_defaults(units=>'degrees', ell=>'$ell');
+is( \$Geo::Ellipsoid::defaults{ellipsoid}, '$ell' );
+is( \$Geo::Ellipsoid::defaults{angle_unit}, 'degrees' );
 my $var = Geo::Ellipsoid->new();
-ok( defined ${var} );
-ok( ${var}->isa( 'Geo::Ellipsoid' ) );
-ok( ${var}->{ellipsoid} eq '$ell' );
-ok( ${var}->{units} eq 'degrees' );
+isnt( ${var}, undef );
+isa_ok( ${var}, 'Geo::Ellipsoid' );
+is( ${var}->{ellipsoid}, '$ell' );
+is( ${var}->{angle_unit}, 'degrees' );
 delta_ok( ${var}->{equatorial}, $a );
 delta_ok( ${var}->{polar}, $b );
 delta_ok( ${var}->{flattening}, $f );
@@ -545,8 +545,8 @@ sub test_set_ellipsoid
 my \$e$n = Geo::Ellipsoid->new();
 \$e->set_ellipsoid('$ell');
 \$e${n}->set_ellipsoid('$ell');
-ok( \$e->{ellipsoid} eq '$ell' );
-ok( \$e${n}->{ellipsoid} eq '$ell' );
+is( \$e->{ellipsoid}, '$ell' );
+is( \$e${n}->{ellipsoid}, '$ell' );
 delta_ok( \$e${n}->{equatorial}, $e->{equatorial} );
 delta_ok( \$e${n}->{polar}, $e->{polar} );
 delta_ok( \$e${n}->{flattening}, $e->{flattening} );
@@ -568,8 +568,8 @@ sub test_set_units
 my \$e$n = Geo::Ellipsoid->new();
 \$e->set_units('$units');
 \$e${n}->set_units('$units');
-ok( \$e->{units} eq '$default' );
-ok( \$e${n}->{units} eq '$default' );
+is( \$e->{angle_unit}, '$default' );
+is( \$e${n}->{angle_unit}, '$default' );
 EOS
   push(@{$tests{set}{code}}, $code);
   ${$tests{set}}{count} += 2;
@@ -593,9 +593,9 @@ sub write_create_test_code
   my $f = $e->{flattening};
   print "  e=$ell, var=$var, a=$a, b=$b, f=$f\n" if $debug;
   my $code = <<EOS;
-ok( defined ${var} );
-ok( ${var}->isa( 'Geo::Ellipsoid' ) );
-ok( ${var}->{ellipsoid} eq '$ell' );
+isnt( ${var}, undef );
+isa_ok( ${var}, 'Geo::Ellipsoid' );
+is( ${var}->{ellipsoid}, '$ell' );
 delta_ok( ${var}->{equatorial}, $a );
 delta_ok( ${var}->{polar}, $b );
 EOS
