@@ -66,3 +66,6 @@
 
 # Skip my shell script utilities.
 ^[^/]*\.sh$
+
+# Skip distro-specific stuff.
+/Geo-Ellipsoid-[0-9]*
