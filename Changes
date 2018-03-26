@@ -1,17 +1,25 @@
 1.15 Not Released
 
- - Improve the test file t/release-whitespaces.t.
+ - Provide set_angle_unit() as an alternative to the too generically
+   named method set_units(). The name set_angle_unit() corresponds
+   nicely to the existing method set_distance_unit().
 
- - Skip my shell script utilities.
+ - Add accessors get_angle_unit(), get_distance_unit(), get_ellipsoid(),
+   get_equatorial_radius(), get_polar_radius(), get_flattening(), and
+   get_eccentricity(), get_longitude_symmetric(), and
+   get_bearing_symmetric(). These are necessary for subclassing.
 
- - Clean up whitespace and fix bug in t/release-whitespaces.t. The list of
-   directories in the test file was incorrect.
+ - Improve documentation and fix typos in the POD. Add more information to the
+   SYNOPSIS. Update BUGS and SUPPORT sections. Update AUTHOR and COPYRIGHT
+   information.
+
+ - Update README file.
+
+ - Correct the version numbering in Changes (this file) and add missing entry
+   for version 1.11. Format CHANGES according to CPAN::Changes::Spec. Add test
+   file t/release-cpan-changes.t.
 
  - Add test file t/release-kwalitee.t.
-
- - Accept three-letter abbreviation of angle unit.
-
- - Improve documentation in the POD.
 
  - Add test file t/release-unused-vars.t and remove unused variables.
 
@@ -23,36 +31,25 @@
 
  - Add test file t/release-test-version.t.
 
- - Update README file.
+ - Add test file t/release-pod-syntax.t
 
  - Add default MANIFEST.SKIP from ExtUtils::Manifest.
-
- - Fix typos in POD.
 
  - Remove code that is never executed.
 
  - Rename the too generically property "units" to "angle_unit", and
    "distance_units" to "distance_unit".
 
- - Provide set_angle_unit() as an alternative to the too generically
-   named method set_units(). The name set_angle_unit() corresponds
-   nicely to the existing method set_distance_unit().
-
- - Add accessors get_angle_unit(), get_distance_unit(), get_ellipsoid(),
-   get_equatorial_radius(), get_polar_radius(), get_flattening(), and
-   get_eccentricity(), get_longitude_symmetric(), and
-   get_bearing_symmetric(). These are necessary for subclassing.
-
  - Rename some old test files and add new test files.
 
  - Don't hardcode the value of pi.
 
  - Use more of the functionality in Test::More. This gives us more informative
-   output if tests fail.
+   output if tests fail. Update gentest/gentest_ellipsoid.pl accordingly.
 
- - Rename the following object properties:
+ - Rename the following internal object properties:
 
-      "latitude"  -> "latitude_symmetric"
+      "latitude"  -> "latitude_symmetric"   (only used internally)
       "longitude" -> "longitude_symmetric"
       "bearing"   -> "bearing_symmetric"
 
@@ -60,24 +57,12 @@
    set_latitude_symmetric() and set_bearing_symmetric(). The old object
    property names without the "_symmtric" suffix are still supported.
 
- - Add more information to the SYNOPSIS.
-
  - Increment version number.
-
- - Update BUGS and SUPPORT sections in the POD.
-
- - Update AUTHOR and COPYRIGHT information.
 
  - Remove range reduction in _normalize_input(). The trigonometric functions do
    more accurate range reduction than we do.
 
- - Add test file t/release-pod-syntax.t
-
  - In POD, use =item for methods, as this is more common than =head2.
-
- - Correct the version numbering in Changes (this file) and add missing entry
-   for version 1.11. Format CHANGES according to CPAN::Changes::Spec. Add test
-   file t/release-cpan-changes.t.
 
 1.14 2016-09-18
 
