@@ -1,4 +1,5 @@
-#!start included /usr/share/perl5/5.26/ExtUtils/MANIFEST.SKIP
+#!start included /usr/share/perl5/5.30/ExtUtils/MANIFEST.SKIP
+
 # Avoid version control files.
 \bRCS\b
 \bCVS\b
@@ -62,10 +63,20 @@
 
 # Avoid MYMETA files
 ^MYMETA\.
-#!end included /usr/share/perl5/5.26/ExtUtils/MANIFEST.SKIP
 
-# Skip my shell script utilities.
-^[^/]*\.sh$
+# Temp files for new META
+^META_new\.(?:json|yml)
 
-# Skip distro-specific stuff.
-/Geo-Ellipsoid-[0-9]*
+# Avoid travis-ci.org file
+^\.travis\.yml
+
+# Avoid AppVeyor file
+^\.?appveyor.yml
+
+#!end included /usr/share/perl5/5.30/ExtUtils/MANIFEST.SKIP
+
+# Avoid more git stuff.
+\B\.gitattributes\b
+
+# Avoid distribution-specific stuff.
+^Geo-Ellipsoid-[0-9]
