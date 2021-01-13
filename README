@@ -24,28 +24,34 @@ commands:
 
 SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for these modules with the
-perldoc command.
+After installing, you can find documentation for this module with the perldoc
+command.
 
     perldoc Geo::Ellipsoid
 
 You can also look for information at:
 
-    RT, CPAN's request tracker
+    GitHub
         http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Ellipsoid
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Geo-Ellipsoid
+    MetaCPAN
+        https://metacpan.org/release/Geo-Ellipsoid
 
     CPAN Ratings
         http://cpanratings.perl.org/d/Geo-Ellipsoid
 
-    Search CPAN
-        http://search.cpan.org/dist/Geo-Ellipsoid
+    CPAN Testers PASS Matrix
+        http://pass.cpantesters.org/distro/A/Geo-Ellipsoid.html
+
+    CPAN Testers Reports
+        http://www.cpantesters.org/distro/A/Geo-Ellipsoid.html
+
+    CPAN Testers Matrix
+        http://matrix.cpantesters.org/?dist=Geo-Ellipsoid
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2016,2018 Peter John Acklam (current maintaner)
+Copyright (C) 2016-2021 Peter John Acklam (current maintaner)
 
 Copyright (C) 2005-2008 Jim Gibson (original author)
 
