@@ -16,18 +16,18 @@ use strict;
 use 5.006_00;
 
 use Scalar::Util 'looks_like_number';
-use Math::Trig;
+use Math::Trig 1.23;
 use Carp;
 
 =pod
 
 =head1 NAME
 
-Geo::Ellipsoid - Longitude and latitude calculations using an ellipsoid model.
+Geo::Ellipsoid - longitude and latitude calculations using an ellipsoid model
 
 =head1 VERSION
 
-Version 1.15, not released.
+Version 1.15.
 
 =cut
 
@@ -63,6 +63,10 @@ our $DEBUG = 0;
   # approximate location given one location and displacement
 
   my @pos = $geo->location( $lat, $lon, $x, $y );
+
+=head1 ABSTRACT
+
+Accurate latitude/longitude calculations.
 
 =head1 DESCRIPTION
 
@@ -572,15 +576,11 @@ sub get_geocentric_radius {
 
     my $a = $self -> {equatorial};
     my $b = $self -> {polar};
-    my $a2 = $a * $a;
-    my $b2 = $b * $b;
 
     my $sa = sin $angle;
     my $ca = cos $angle;
-    my $sa2 = $sa * $sa;
-    my $ca2 = $ca * $ca;
 
-    return $a * $b / sqrt($a2 * $sa2 + $b2 * $ca2);
+    return $a * $b / _hypot($a * $sa, $b * $ca);
 }
 
 =pod
@@ -662,6 +662,12 @@ sub get_distance_unit {
 }
 
 =pod
+
+=back
+
+=head2 Calculations
+
+=over
 
 =item scales
 
@@ -1094,6 +1100,37 @@ sub _normalize_output
   }
 }
 
+# _max
+#
+# Return the maximum of the two input arguments.
+
+sub _max {
+    $_[0] > $_[1] ? $_[0] : $_[1];
+}
+
+# _min
+#
+# Return the minimum of the two input arguments.
+
+sub _min {
+    $_[0] < $_[1] ? $_[0] : $_[1];
+}
+
+# _hypot
+#
+# Returns the length of the hypotenuse of a right-angle triangle given the
+# length of the two catheti (the two other sides). The result is computed in a
+# way that avoids problems that occur when squaring very large or very small
+# numbers.
+
+sub _hypot {
+    my $x = abs($_[0]);
+    my $y = abs($_[1]);
+    my $z = _max($x, $y);
+    my $r = _min($x, $y) / $z;
+    return $z * sqrt(1 + $r * $r);
+}
+
 =pod
 
 =back
@@ -1150,7 +1187,7 @@ may be obtained from
 
 =head1 AUTHOR
 
-Peter John Acklam, C<< <pjacklam@online.no> >> (current maintainer)
+Peter John Acklam, C<< <pjacklam@gmail.com> >> (current maintainer)
 
 Jim Gibson, C<< <Jim@Gibson.org> >> (original author)
 
@@ -1158,11 +1195,13 @@ Jim Gibson, C<< <Jim@Gibson.org> >> (original author)
 
 See LIMITATIONS, above.
 
-Please report any bugs or feature requests to
-C<bug-geo-ellipsoidmath-bigint at rt.cpan.org>, or through the web interface at
-L<https://rt.cpan.org/Ticket/Create.html?Queue=Geo-Ellipsoid> (requires login).
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
+There are currently no known bugs.
+
+Please report any bugs or feature requests via
+L<https://github.com/pjacklam/p5-Geo-Ellipsoid/issues>.
+
+Old bug reports and feature requests can be found at
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Ellipsoid>.
 
 =head1 SUPPORT
 
@@ -1174,21 +1213,25 @@ You can also look for information at:
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
+=item * GitHub
 
-L<https://rt.cpan.org/Dist/Display.html?Name=Geo-Ellipsoid>
+L<https://github.com/pjacklam/p5-Geo-Ellipsoid>
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item * MetaCPAN
 
-L<http://annocpan.org/dist/Geo-Ellipsoid>
+L<https://metacpan.org/release/Geo-Ellipsoid>
 
 =item * CPAN Ratings
 
-L<http://annocpan.org/dist/Geo-Ellipsoid>
+L<http://cpanratings.perl.org/d/Geo-Ellipsoid>
 
-=item * Search CPAN
+=item * CPAN Testers PASS Matrix
 
-L<http://search.cpan.org/dist/Geo-Ellipsoid/>
+L<http://pass.cpantesters.org/distro/A/Geo-Ellipsoid.html>
+
+=item * CPAN Testers Reports
+
+L<http://www.cpantesters.org/distro/A/Geo-Ellipsoid.html>
 
 =item * CPAN Testers Matrix
 
@@ -1198,9 +1241,9 @@ L<http://matrix.cpantesters.org/?dist=Geo-Ellipsoid>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2008 Jim Gibson, all rights reserved.
+Copyright 2016-2021 Peter John Acklam, current maintainer.
 
-Copyright 2016, 2018 Peter John Acklam
+Copyright 2005-2008 Jim Gibson, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
