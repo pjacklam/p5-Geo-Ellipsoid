@@ -3,22 +3,11 @@ package Geo::Ellipsoid::TestUtils;
 use strict;
 use warnings;
 
-use Exporter;
+use Math::Trig qw< asin >;
+
+require Exporter;
 our @ISA       = qw< Exporter >;
-our @EXPORT_OK = qw< PI TWOPI rand_latlon >;
-
-###############################################################################
-# Constants.
-###############################################################################
-
-sub PI    { atan2 0, -1 }
-sub TWOPI { 2 * PI; }
-
-###############################################################################
-# Functions.
-###############################################################################
-
-sub asin { atan2($_[0], sqrt(1 - $_[0] * $_[0])) }
+our @EXPORT_OK = qw< rand_latlon >;
 
 # Return latitude and longitude in radians for a point randomly distributed on
 # the surface of a sphere.
