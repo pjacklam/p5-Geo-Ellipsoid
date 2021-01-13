@@ -1,5 +1,3 @@
-# Perl distro generic.
-
 .*
 !.gitignore
 /MANIFEST*
@@ -15,12 +13,24 @@
 /inc/
 /pm_to_blib
 pod2htm*
-*.bs
 
-# Perl distro Specific.
+# edits and editors
+
+.#*
+[#]*#
+*~
+*.*~*
+*.bak
+*.old
+*.orig
+*.tmp
+
+# patch and diff
+
+*.patch
+*.rej
+*.diff
+
+# distribution-specific
 
 /Geo-Ellipsoid-[0-9]*
-
-# Skip my shell script utilities.
-
-/*.sh
