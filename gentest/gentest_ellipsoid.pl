@@ -112,6 +112,7 @@ EOS
   push(@{$tests{load}{code}},$code);
   $tests{load}{count} = 6;
 
+  my $t = '';
   for my $s (
     qw{
       new
@@ -132,10 +133,10 @@ EOS
     }
 
 ) {
-    my $t = "can_ok( 'Geo::Ellipsoid', '$s' );";
-    push(@{$tests{load}{code}},$t);
+    $t .= "can_ok( 'Geo::Ellipsoid', '$s' );\n";
     $tests{load}{count}++;
   }
+  push(@{$tests{load}{code}},$t);
 }
 
 sub test_object_creation
@@ -702,8 +703,9 @@ sub write_test_code
   print "Writing test program $file with $n tests...\n";
   open( my $fh, '>', "$file.t" ) or die("Can't create $file.t: $!");
   write_prolog($fh,$t,$n);
-  print $fh join("\n", @{${$tests{$t}}{code}});
-  close($fh);
+  print $fh join("\n", @{${$tests{$t}}{code}})
+    or die("Can't print to $file.t: $!");
+  close($fh) or die("Can't close file $file.t: $!");
 }
 
 sub write_prolog
