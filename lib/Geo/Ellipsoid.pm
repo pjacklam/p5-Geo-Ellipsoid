@@ -1070,8 +1070,7 @@ sub _normalize_input
   my $units = shift;
   my @args = @_;
   return map {
-    $_ = deg2rad($_) if $units eq 'degrees';
-    $_
+    $units eq 'degrees' ? deg2rad($_) : $_
   } @args;
 }
 
