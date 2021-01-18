@@ -78,7 +78,7 @@ calculate distance and bearing between two widely-separated locations
 on the earth's surface.
 
 The shape of an ellipsoid is defined by the lengths of its
-semi-major and semi-minor axes. The shape may also be specifed by
+semi-major and semi-minor axes. The shape may also be specified by
 the flattening ratio C<f> as:
 
     f = ( semi-major - semi-minor ) / semi-major
@@ -283,7 +283,7 @@ may also be set in the constructor of the object. The recognized values are
 
     $geo->set_distance_unit('kilometer');
 
-For any other unit of distance not recogized by this method, pass a numerical
+For any other unit of distance not recognized by this method, pass a numerical
 argument representing the length of the distance unit in meters. For example,
 to use units of furlongs, call
 
