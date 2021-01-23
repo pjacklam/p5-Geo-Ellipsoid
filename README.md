@@ -10,25 +10,25 @@ Version 1.15.
 
     use Geo::Ellipsoid;
 
-    $geo = Geo::Ellipsoid->new(ellipsoid  => 'NAD27',
-                               angle_unit => 'degrees');
+    my $geo = Geo::Ellipsoid->new(ellipsoid  => 'NAD27',
+                                  angle_unit => 'degrees');
 
-    @origin = ( 37.619002, -122.374843 );    # SFO
-    @dest = ( 33.942536, -118.408074 );      # LAX
+    my @origin = ( 37.619002, -122.374843 );      # SFO
+    my @dest   = ( 33.942536, -118.408074 );      # LAX
 
     # range and bearing from one location to another
 
-    ( $range, $bearing ) = $geo->to( @origin, @dest );
+    my ( $range, $bearing ) = $geo->to( @origin, @dest );
     $range = $geo->range( @origin, @dest );
     $bearing = $geo->bearing( @origin, @dest );
 
     # destination given start point, range, and bearing
 
-    ( $lat, $lon ) = $geo->at( @origin, 2000, 45.0 );
+    my ( $lat, $lon ) = $geo->at( @origin, 2000, 45.0 );
 
     # approximate displacement given one location and a destination
 
-    ( $x, $y ) = $geo->displacement( @origin, @dest );
+    my ( $x, $y ) = $geo->displacement( @origin, @dest );
 
     # approximate location given one location and displacement
 
@@ -48,7 +48,7 @@ calculate distance and bearing between two widely-separated locations
 on the earth's surface.
 
 The shape of an ellipsoid is defined by the lengths of its
-semi-major and semi-minor axes. The shape may also be specifed by
+semi-major and semi-minor axes. The shape may also be specified by
 the flattening ratio `f` as:
 
     f = ( semi-major - semi-minor ) / semi-major
@@ -120,7 +120,7 @@ that may be selected for use by Geo::Ellipsoid.
 
         $geo->set_distance_unit('kilometer');
 
-    For any other unit of distance not recogized by this method, pass a numerical
+    For any other unit of distance not recognized by this method, pass a numerical
     argument representing the length of the distance unit in meters. For example,
     to use units of furlongs, call
 
@@ -383,25 +383,34 @@ You can also look for information at:
 
 - GitHub
 
+    GitHub is a code hosting platform for version control and collaboration.
+
     [https://github.com/pjacklam/p5-Geo-Ellipsoid](https://github.com/pjacklam/p5-Geo-Ellipsoid)
 
 - MetaCPAN
 
+    A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
     [https://metacpan.org/release/Geo-Ellipsoid](https://metacpan.org/release/Geo-Ellipsoid)
 
-- CPAN Ratings
+- CPANTS
 
-    [http://cpanratings.perl.org/d/Geo-Ellipsoid](http://cpanratings.perl.org/d/Geo-Ellipsoid)
+    The CPANTS is a website that analyzes the Kwalitee (code metrics) of a
+    distribution.
 
-- CPAN Testers PASS Matrix
-
-    [http://pass.cpantesters.org/distro/A/Geo-Ellipsoid.html](http://pass.cpantesters.org/distro/A/Geo-Ellipsoid.html)
+    [https://cpants.cpanauthors.org/dist/Geo-Ellipsoid](https://cpants.cpanauthors.org/dist/Geo-Ellipsoid)
 
 - CPAN Testers Reports
 
-    [http://www.cpantesters.org/distro/A/Geo-Ellipsoid.html](http://www.cpantesters.org/distro/A/Geo-Ellipsoid.html)
+    The CPAN Testers is a network of smoke testers who run automated tests on
+    uploaded CPAN distributions.
+
+    [http://www.cpantesters.org/distro/G/Geo-Ellipsoid.html](http://www.cpantesters.org/distro/G/Geo-Ellipsoid.html)
 
 - CPAN Testers Matrix
+
+    The CPAN Testers Matrix displays smoke test results for this distribution for
+    various combinations of Perl version and operating systems.
 
     [http://matrix.cpantesters.org/?dist=Geo-Ellipsoid](http://matrix.cpantesters.org/?dist=Geo-Ellipsoid)
 

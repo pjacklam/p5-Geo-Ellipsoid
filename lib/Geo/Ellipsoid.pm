@@ -40,25 +40,25 @@ our $DEBUG = 0;
 
   use Geo::Ellipsoid;
 
-  $geo = Geo::Ellipsoid->new(ellipsoid  => 'NAD27',
-                             angle_unit => 'degrees');
+  my $geo = Geo::Ellipsoid->new(ellipsoid  => 'NAD27',
+                                angle_unit => 'degrees');
 
-  @origin = ( 37.619002, -122.374843 );    # SFO
-  @dest = ( 33.942536, -118.408074 );      # LAX
+  my @origin = ( 37.619002, -122.374843 );      # SFO
+  my @dest   = ( 33.942536, -118.408074 );      # LAX
 
   # range and bearing from one location to another
 
-  ( $range, $bearing ) = $geo->to( @origin, @dest );
+  my ( $range, $bearing ) = $geo->to( @origin, @dest );
   $range = $geo->range( @origin, @dest );
   $bearing = $geo->bearing( @origin, @dest );
 
   # destination given start point, range, and bearing
 
-  ( $lat, $lon ) = $geo->at( @origin, 2000, 45.0 );
+  my ( $lat, $lon ) = $geo->at( @origin, 2000, 45.0 );
 
   # approximate displacement given one location and a destination
 
-  ( $x, $y ) = $geo->displacement( @origin, @dest );
+  my ( $x, $y ) = $geo->displacement( @origin, @dest );
 
   # approximate location given one location and displacement
 
@@ -1212,27 +1212,46 @@ You can also look for information at:
 
 =over 4
 
-=item * GitHub
+=item *
+
+GitHub
+
+GitHub is a code hosting platform for version control and collaboration.
 
 L<https://github.com/pjacklam/p5-Geo-Ellipsoid>
 
-=item * MetaCPAN
+=item *
+
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
 
 L<https://metacpan.org/release/Geo-Ellipsoid>
 
-=item * CPAN Ratings
+=item *
 
-L<http://cpanratings.perl.org/d/Geo-Ellipsoid>
+CPANTS
 
-=item * CPAN Testers PASS Matrix
+The CPANTS is a website that analyzes the Kwalitee (code metrics) of a
+distribution.
 
-L<http://pass.cpantesters.org/distro/A/Geo-Ellipsoid.html>
+L<https://cpants.cpanauthors.org/dist/Geo-Ellipsoid>
 
-=item * CPAN Testers Reports
+=item *
 
-L<http://www.cpantesters.org/distro/A/Geo-Ellipsoid.html>
+CPAN Testers Reports
 
-=item * CPAN Testers Matrix
+The CPAN Testers is a network of smoke testers who run automated tests on
+uploaded CPAN distributions.
+
+L<http://www.cpantesters.org/distro/G/Geo-Ellipsoid.html>
+
+=item *
+
+CPAN Testers Matrix
+
+The CPAN Testers Matrix displays smoke test results for this distribution for
+various combinations of Perl version and operating systems.
 
 L<http://matrix.cpantesters.org/?dist=Geo-Ellipsoid>
 

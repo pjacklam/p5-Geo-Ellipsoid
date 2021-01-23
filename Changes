@@ -1,4 +1,4 @@
-1.15 Not Released
+1.15 2021-01-23
 
  - Provide set_angle_unit() as an alternative to the too generically
    named method set_units(). The name set_angle_unit() corresponds
@@ -9,43 +9,11 @@
    get_eccentricity(), get_longitude_symmetric(), and
    get_bearing_symmetric(). These are necessary for subclassing.
 
- - Improve documentation and fix typos in the POD. Add more information to the
-   SYNOPSIS. Update BUGS and SUPPORT sections. Update AUTHOR and COPYRIGHT
-   information.
-
- - Update README file.
-
  - Correct the version numbering in Changes (this file) and add missing entry
-   for version 1.11. Format CHANGES according to CPAN::Changes::Spec. Add test
-   file t/release-cpan-changes.t.
-
- - Add test file t/release-kwalitee.t.
-
- - Add test file t/release-unused-vars.t and remove unused variables.
-
- - Add test file t/release-pod-coverage.t.
-
- - Add test file t/release-whitespaces.t and clean up whitespace.
-
- - Add test file t/release-portability.t.
-
- - Add test file t/release-test-version.t.
-
- - Add test file t/release-pod-syntax.t
-
- - Add default MANIFEST.SKIP from ExtUtils::Manifest.
-
- - Remove code that is never executed.
+   for version 1.11. Format CHANGES according to CPAN::Changes::Spec.
 
  - Rename the too generically property "units" to "angle_unit", and
    "distance_units" to "distance_unit".
-
- - Rename some old test files and add new test files.
-
- - Don't hardcode the value of pi.
-
- - Use more of the functionality in Test::More. This gives us more informative
-   output if tests fail. Update gentest/gentest_ellipsoid.pl accordingly.
 
  - Rename the following internal object properties:
 
@@ -57,12 +25,9 @@
    set_latitude_symmetric() and set_bearing_symmetric(). The old object
    property names without the "_symmtric" suffix are still supported.
 
- - Increment version number.
-
- - Remove range reduction in _normalize_input(). The trigonometric functions do
-   more accurate range reduction than we do.
-
- - In POD, use =item for methods, as this is more common than =head2.
+ - Improve documentation and fix typos in the POD. Add more information to the
+   SYNOPSIS. Update BUGS and SUPPORT sections. Update AUTHOR and COPYRIGHT
+   information.
 
 1.14 2016-09-18
 
@@ -91,10 +56,10 @@
 
 1.10 2008-06-30
 
- - Added set_longitude_symmetric, set_bearing_symmetric, and
-   set_distance_unit methods
+ - Add methods set_longitude_symmetric(), set_bearing_symmetric(), and
+   set_distance_unit methods().
 
- - Corrected example of at method in documentation
+ - Corrected example of at() method in documentation.
 
  - Ensured no test too close to range boundaries (0,360 or -180,180)
 
