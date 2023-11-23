@@ -21,7 +21,7 @@ my $failno = 0;
 
 END {
     print "1..$testno\n";
-    exit $failno == 0 ? 0 : 1;
+    exit($failno == 0 ? 0 : 1);
 }
 
 # Search for changelog files.
